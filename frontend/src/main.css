@@ -1,0 +1,280 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 
+
+.backdrop{
+  background:linear-gradient(233deg, #e56420, #c22525, #3d9c31, #37bbde);
+  width:100%;
+  height:100vh;
+  background-size:cover;
+  background-blend-mode: hard-light;
+  animation: hue-rotate 8s linear infinite;
+  position: absolute;
+  @apply -z-10
+}
+
+@keyframes hue-rotate {
+  from {
+    -webkit-filter: hue-rotate(0);
+    -moz-filter: hue-rotate(0);
+    -ms-filter: hue-rotate(0);
+    filter: hue-rotate(0);
+  }
+  to {
+    -webkit-filter: hue-rotate(360deg);
+    -moz-filter: hue-rotate(360deg);
+    -ms-filter: hue-rotate(360deg);
+    filter: hue-rotate(360deg);
+  }
+} */
+
+
+body{
+  font-family: 'Quicksand', sans-serif;
+  @apply m-0
+} 
+
+.back{
+  
+  background-image: url('/bg2.jpg');
+  @apply w-screen h-screen fixed top-0 left-0 -z-10
+}
+/* .back {
+	background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+	background-size: 400% 400%;
+	animation: gradient 15s ease infinite;
+	height: 100vh;
+  @apply w-screen h-screen fixed top-0 left-0 -z-10
+}
+
+@keyframes gradient {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}  */
+.glassmorphism{
+  background: rgba(17, 34, 80, 0.5);
+  box-shadow: 0px 30px 60px rgba(0, 0, 0, 0.25),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(30px);
+}
+.backdrop {
+  @apply absolute w-full h-screen left-0 top-0 glassmorphism
+}
+
+
+nav{
+  @apply w-full md:w-14 md:h-screen bg-white md:rounded-tr-3xl md:rounded-br-3xl fixed z-20 shadow-2xl
+}
+
+.purple_gradient {
+  @apply bg-gradient-to-r from-purple-700 to-orange-600 bg-clip-text text-transparent;
+}
+.purple_gradient_bg {
+  @apply bg-gradient-to-br from-purple-700 to-orange-600
+}
+main {
+  @apply md:pl-14 text-[#fff] pt-14 md:pt-0 /*#212427*/
+}
+main > div {
+  @apply px-4 md:px-10
+}
+
+i {
+  @apply text-2xl text-[#353535]
+}
+
+nav a {
+  @apply md:my-2 relative w-full flex justify-center items-center py-2 md:py-0 outline-none transition-all
+}
+nav button{
+  @apply my-2
+}
+nav a.active i{
+  @apply purple_gradient
+}
+nav a.active::before {
+  @apply absolute bottom-0 w-full md:left-0 md:w-1 h-1 md:h-full purple_gradient_bg content-[''] rounded-tr-3xl md:rounded-tl-none rounded-tl-3xl md:rounded-br-3xl
+}
+
+.component{
+  @apply transition-all rounded-3xl p-2 my-2
+}
+
+.user_img::before{
+  @apply content-[''] w-72 h-72 rounded-full border-b-0 border-l-0 -rotate-12 border-4 border-purple-700 absolute -top-4 -left-4
+}
+
+
+
+.head_text{
+  @apply purple_gradient font-extrabold my-4 capitalize
+}
+
+.profile .head_text{
+  @apply text-lg
+}
+
+.sign{
+  @apply flex 
+}
+.sign .video {
+  @apply lg:w-[400px] md:w-[350px] overflow-hidden hidden md:block fixed top-0 left-0
+}
+.const{
+  @apply lg:w-[400px] md:w-[350px] flex-shrink-0
+}
+
+form .group{
+  @apply flex flex-col relative mb-8
+}
+form .group input{
+  @apply px-5 py-3 rounded-lg outline-none border-2 border-gray-500
+}
+form .group input[type='password']{
+  @apply tracking-[.2rem]
+}
+form .group label{
+  @apply text-sm capitalize absolute top-3.5 left-4 bg-white px-2 text-gray-500 transition-all rounded-full
+  cursor-text select-none
+}
+form .group input:valid ~ label,
+form .group input:focus ~ label{
+  @apply -top-3 left-2
+}
+
+/* form .group .msg{
+  @apply flex items-center gap-2 text-red-800 text-sm 
+}
+form .group .msg i{
+  @apply text-[20px]
+} */
+
+.sign button {
+  @apply purple_gradient_bg py-2.5 px-4 rounded-lg text-white font-semibold capitalize
+}
+
+.alert{
+  @apply z-10 fixed font-semibold w-full bottom-0 left-0 md:bottom-auto md:left-auto md:right-6
+  md:max-w-xs md:top-8 bg-glass px-5 py-3 rounded-lg md:border-[1px] border-[#323232] flex 
+  justify-center items-center gap-3 md:w-fit
+}
+
+.alert.error *{
+  @apply text-red-800
+}
+
+
+.alert.success *{
+  @apply text-green-800
+}
+
+
+.chat {
+  @apply p-0 flex 
+}
+
+.chat .right {
+  @apply p-5 w-56 h-screen text-[#212427] bg-white md:rounded-tl-3xl md:rounded-bl-3xl z-20 flex-shrink-0 ml-auto shadow-2xl
+}
+.chat .control_btns button{
+  @apply flex gap-2 text-sm items-center my-3
+}
+.chat .control_btns button i{
+  @apply text-[20px]
+}
+
+.chat .left{
+  @apply w-72 border-r-[1px] border-[#323232] p-3 flex-shrink-0 bg-glass
+}
+
+.chat .center {
+  @apply w-full h-screen  flex flex-col
+}
+.chat .center i {
+  @apply text-white
+}
+.chat .center .connection {
+  @apply my-0
+}
+
+input.glass {
+  @apply px-5 py-2 outline-none rounded-full bg-glass
+}
+.chat .center input {
+  @apply pl-12 w-full 
+}
+
+.chat .center .msg{
+  @apply flex flex-col gap-1
+}
+
+.chat .center .msg .text {
+  @apply max-w-md text-sm bg-glass px-5 py-4 rounded-xl overflow-hidden z-10
+}
+
+.chat .center .msg .text.img{
+  @apply p-0 
+}
+.msg span{
+  @apply text-gray-500 text-sm font-semibold transition-all
+}
+.msg .seenin {
+  @apply -translate-y-9 transition-all
+}
+.msg .sendin {
+  @apply translate-y-9 transition-all
+}
+.msg .seenin span {
+  @apply ml-14
+}
+.msg span {
+  @apply opacity-0 
+}
+
+.chat .msg:hover > .in {
+  @apply translate-y-0 delay-1000
+}
+.chat .msg:hover > .in span{
+  @apply opacity-100 delay-1000
+}
+
+
+.chat .center .msg.me .seenin span {
+  @apply float-right mr-4
+} 
+
+::-webkit-scrollbar {
+  @apply z-0
+}
+/* 
+.explore{
+  @apply p-0
+}
+
+.explore .search {
+  @apply fixed overflow-y-auto h-screen w-[400px] bg-glass
+} */
+
+.glassmodel{
+  @apply fixed top-0 left-0 h-screen w-[400px] bg-glass pl-20 pr-6 backdrop-blur-md text-white z-10
+}
+
+
+.connection span {
+  @apply text-sm
+}
+
+
+button:disabled{
+  @apply animate-pulse
+}
