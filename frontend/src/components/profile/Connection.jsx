@@ -3,8 +3,9 @@ import Chat from "../userTypes/Chat"
 import User from "../userTypes/User"
 import Friend from "../userTypes/Friend"
 import NotFriend from "../userTypes/NotFriend"
-
-const Connection = ({ user={fullname: 'ahmed elsayed', image: '/bg2.jpg', email: 'email@gamil.com'}, type }) => {
+import Notify from "../userTypes/Notify"
+//={fullname: 'ahmed elsayed', image: '/bg2.jpg', email: 'email@gamil.com'}
+const Connection = ({ user, type, msg='' }) => {
 
   const generateUser = (type) => {
 
@@ -17,6 +18,9 @@ const Connection = ({ user={fullname: 'ahmed elsayed', image: '/bg2.jpg', email:
         break
       case 'notfriend':
         return <NotFriend user={user} />
+        break
+      case 'notify':
+        return <Notify user={user} msg={msg} />
         break
       default:
         return <User user={user} />

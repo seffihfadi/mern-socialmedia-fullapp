@@ -77,3 +77,23 @@ export const rejectConnectionRequest = async (req, res, next) => {
     next(error)
   }
 }
+
+export const connectionRequests = async (req, res, next) => {
+  const receiverID = req.params.receiverID
+  try {
+    if(!receiverID) {
+      res.status(400)
+      throw new Error('you must provide receiverID.')
+    }
+
+    const requests = await ConnectionRequest.find({recipient: receiverID}).populate('requester', ['fullname', '_id', 'image', 'createdAt'])
+    if (!requests) {
+      res.status(404).json([])
+    }
+
+    res.status(200).json(requests)
+    
+  } catch (error) {
+    next(error)
+  }
+}
