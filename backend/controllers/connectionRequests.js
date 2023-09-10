@@ -86,7 +86,7 @@ export const connectionRequests = async (req, res, next) => {
       throw new Error('you must provide receiverID.')
     }
 
-    const requests = await ConnectionRequest.find({recipient: receiverID}).populate('requester', ['fullname', '_id', 'image', 'createdAt'])
+    const requests = await ConnectionRequest.find({recipient: receiverID, status: "pending"}).populate('requester', ['fullname', '_id', 'image', 'createdAt'])
     if (!requests) {
       res.status(404).json([])
     }

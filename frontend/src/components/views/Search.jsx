@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import useDebounce from '../../utils/hooks/useDebounce'
 import axios from 'axios'
 import { useAlert } from '../../context/AlertProvider'
+import Empty from '../Empty'
 
 const Search = () => {
   const [search, setSearch] = useState('')
@@ -51,10 +52,7 @@ const Search = () => {
         {data.map((user) => <Connection user={user} key={user._id} type='notfriend' />)}
       </div>
       :
-      <div className="flex flex-col justify-center items-center">
-        <i className="uil uil-rainbow text-[150px]"></i>
-        <p className='text-center text-[#434343]'>Discover new, fascinating individuals and forge meaningful connections with them.</p>
-      </div>
+      <Empty type='lg' text='Discover new, fascinating individuals and forge meaningful connections with them.' />
       }
       
     </div>

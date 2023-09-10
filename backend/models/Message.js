@@ -18,8 +18,6 @@ const messageSchema = new Schema({
     type: Types.ObjectId,
     ref: 'User'
   }]
-
-
 }, {
   timestamps: true
 })

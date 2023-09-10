@@ -141,3 +141,26 @@ export const getAllUsers = async (req, res, next) => {
   }
 }
 
+
+export const getUserByID = async (req, res, next) => {
+  const userID = req.params.userID
+  const sessionUserID = req.user._id.toString()
+  try {
+    let userRedID = ''
+    if (userID == sessionUserID || !userID.match(/^[0-9a-fA-F]{24}$/)) {
+      userRedID = sessionUserID
+    } else {
+
+      const isUserFound = await User.findById(userID)
+      userRedID = !isUserFound ? sessionUserID : userID
+    }
+
+    
+    const userProfile = await User.findById(userRedID).select('-password').populate('connections')
+    res.status(200).json(userProfile)
+    
+  } catch (error) {
+    next(error)
+  }
+}
+

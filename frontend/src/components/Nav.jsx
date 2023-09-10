@@ -13,14 +13,15 @@ const Nav = () => {
   const navigate = useNavigate()
   const handleSignOut = async () => {
     try {
-      const responce = await axios.get('http://127.0.0.1:4000/api/user/signout', { withCredentials: true })
+      const response = await axios.get('http://127.0.0.1:4000/api/user/signout', { withCredentials: true })
       //console.log('responce', responce)
-      if (responce.status === 200) {
-        setAlert({type: 'success', text: responce.data.message})
+      if (response.status === 200) {
+        setAlert({type: 'success', text: response.data.message})
         navigate('/signin', {replace: true})
       }
     } catch (error) {
-      console.log('error', error)
+      //console.log('error', error)
+      setAlert({type: 'error', text: error.response.data.message})
     }
   }
 

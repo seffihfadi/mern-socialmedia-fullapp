@@ -22,9 +22,11 @@ const App = () => {
         {/* privat routes */}
         <Route element={<AuthProvider><RequireAuth /></AuthProvider>}>
           <Route path='/' element={<Home />} />
+          <Route path='/chat/:roomID' element={<Chat />} />
           <Route path='/chat' element={<Chat />} />
           <Route path='/explore' element={<Explore />} />
           <Route path='/profile' element={<Profile />} />
+          <Route path='/profile/:userID' element={<Profile />} />
           <Route path='/add-post' element={<AddPost />} />
         </Route>
       </Routes>

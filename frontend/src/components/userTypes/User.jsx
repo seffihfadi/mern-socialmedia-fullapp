@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-const User = ({user}) => {
+const User = ({ user }) => {
   return (
     <>
       <Link className="flex items-center gap-3" to={`/profile/${user._id}`}>

@@ -1,71 +1,66 @@
-import Connection from "../profile/Connection"
 import { useAuth } from "../../context/AuthProvider"
+import ChatRoom from "./ChatRoom"
+import Messages from './Messages'
+import Loader from '../Loader'
+import { useState } from "react"
+import { useAlert } from "../../context/AlertProvider"
+import axios from "axios"
+import { useRoom } from "../../context/RoomProvider"
 
 const Conversation = () => {
+  const room = useRoom()
   const user = useAuth()
+  const [setAlert] = useAlert()
+  const [msg, setMsg] = useState('')
+
+  const handleSend = async (e) => {
+    e.preventDefault()
+    const message = msg
+    setMsg('')
+    try {
+      const response = await axios.post('http://127.0.0.1:4000/api/messages/insert-message', 
+        {message: msg, roomID: room._id}, {withCredentials: true}
+      )
+      console.log('response', response)
+    } catch (error) {
+      setAlert({type: 'error', text: error.response.data.message})
+    }
+
+  }
+
   return (
     <div className="center">
       <div className="flex justify-between py-2 px-4">
-        <Connection type='user' />
+        <ChatRoom key={room._id} room={room} />
         <div className="flex">
           <button><i className="uil uil-sliders-v"></i></button>
         </div>
       </div>
-      <div className="msgs h-full overflow-y-auto px-6">
-        <div className="msg">
-          <div className="in sendin text-center">
-            <span>Thu oct 5, 2023</span>
+
+      <Messages roomID={room._id} />
+      <div className="mt-auto py-2 px-4">
+        <form className="flex gap-3 items-center" noValidate>
+          <div className="flex">
+            <button><i className="uil uil-image"></i></button>  
           </div>
-          <div className="flex gap-2">
-            <div className="flex">
-              <img className="w-8 h-8 object-cover mt-auto rounded-full" src="/bg4.jpg" alt="" />
-            </div>
-            <div className="text">
-              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Odit cumque numquam, nemo animi eligendi ut aliquam ex iusto, qui dolores id error voluptatum sapiente eos. Distinctio magni placeat fugiat doloribus.</p>
-            </div>
+          <div className="relative w-full">
+            <input 
+              value={msg} 
+              onChange={(e) => setMsg(e.target.value)} 
+              name="message" 
+              className="glass" 
+              type="text" 
+              placeholder="Aa" 
+              required
+            />
+            <img className="left-1 top-1 absolute w-8 h-8 rounded-full object-cover" src={user.image} alt={user.name} />
           </div>
-          <div className="in seenin">
-            <span>seen 15:30</span>
+          {msg.length > 0 &&
+          <div className="flex">
+            <button onClick={handleSend}><i className="uil uil-message"></i></button>  
           </div>
-        </div>
-        <div className="msg me">
-          <div className="in sendin text-center">
-            <span>Thu oct 5, 2023</span>
-          </div>
-          <div className="flex flex-row-reverse gap-2">
-            <div className="text">
-              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Odit cumque numquam, nemo animi eligendi ut aliquam ex iusto, qui dolores id error voluptatum sapiente eos. Distinctio magni placeat fugiat doloribus.</p>
-            </div>
-          </div>
-          <div className="in seenin">
-            <span>seen 15:30</span>
-          </div>
-        </div>
-        <div className="msg me">
-          <div className="in sendin text-center">
-            <span>Thu oct 5, 2023</span>
-          </div>
-          <div className="flex flex-row-reverse gap-2">
-            <div className="text img">
-              <img src="/bg4.jpg" alt="" />
-            </div>
-          </div>
-          <div className="in seenin">
-            <span>seen 15:30</span>
-          </div>
-        </div>
-      </div>
-      <div className="flex gap-3 mt-auto items-center py-2 px-4">
-        <div className="flex">
-          <button><i className="uil uil-image"></i></button>  
-        </div>
-        <div className="relative w-full">
-          <input name="message" className="glass" type="text" placeholder="Aa" />
-          <img className="left-1 top-1 absolute w-8 h-8 rounded-full object-cover" src={user.image} alt={user.name} />
-        </div>
-        <div className="flex">
-          <button><i className="uil uil-message"></i></button>  
-        </div>
+          }
+        </form>
       </div>
     </div>
   )

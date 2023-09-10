@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
 import User from '../models/User.js'
 const privat = async (req, res, next) => {
-  console.log('req.cookies', req.cookie)
+  //console.log('req.cookies', req.cookie)
   try {
     const token = req.cookies.zoquixToken
     if (!token) {
@@ -15,7 +15,7 @@ const privat = async (req, res, next) => {
       throw new Error('something went wrong, please login')
     }
     const {userID} = verified
-    const user = await User.findById(userID).select('-password')
+    const user = await User.findById(userID).select('-password').populate('connections', ['-password', '-connections'])
     if (!user) {
       res.status(401)
       throw new Error('user not found, something went wrong, please login')

@@ -4,6 +4,8 @@ import cors from 'cors'
 import mongoose from 'mongoose'
 import userRoutes from "./routes/user.js"
 import connectionRequestsRoutes from "./routes/connectionRequests.js"
+import chatRoutes from "./routes/chat.js"
+import messagesRoutes from "./routes/messages.js"
 import bodyParser from "body-parser"
 import cookieParser from "cookie-parser"
 import errorHandler from './middlewares/error.js'
@@ -24,12 +26,11 @@ app.use(cookieParser())
 
 
 // routes middlewares
-app.get('/', (req, res) => {
-  res.send('good work')
-})
 
 app.use('/api/user', userRoutes)
 app.use('/api/connection-requests', connectionRequestsRoutes)
+app.use('/api/chat', chatRoutes)
+app.use('/api/messages', messagesRoutes)
 
 // error middlewares
 app.use(errorHandler)
