@@ -46,7 +46,7 @@ const Nav = () => {
       <NavLink to='/explore'>
         <i className="uil uil-compass"></i>
       </NavLink>
-      <NavLink to='/add-post'>
+      <NavLink to='/post/add'>
         <i className="uil uil-plus-circle"></i>
       </NavLink>
       <button onClick={(e) => {handleModel(e, 'search')}}>

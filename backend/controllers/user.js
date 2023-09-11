@@ -1,7 +1,7 @@
 import User from "../models/User.js"
-import cloudinary from "../utils/cloudinary.js"
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
+import cloudinary from "../utils/cloudinary.js"
 
 const generateToken = (userID) => {
   return jwt.sign({ userID }, process.env.JWT_SECRET, {expiresIn: '1d'})
@@ -17,11 +17,11 @@ export const signupUser = async (req, res, next) => {
       throw new Error('please fill in all required fields')
     } 
 
-    // const imageB64 = Buffer.from(image.buffer).toString("base64");
-    // let dataURI = "data:" + image.mimetype + ";base64," + imageB64;
-    // const response = await cloudinary.uploader.upload(dataURI, {
-    //   folder: "Zoquix",
-    // })
+    const imageB64 = Buffer.from(image.buffer).toString("base64");
+    let dataURI = "data:" + image.mimetype + ";base64," + imageB64;
+    const {secure_url: url} = await cloudinary.uploader.upload(dataURI, {
+      folder: "Zoquix",
+    })
 
     const user = await User.findOne({email})
     if (!!user) {
@@ -33,7 +33,7 @@ export const signupUser = async (req, res, next) => {
       email, 
       fullname, 
       password, 
-      image: 'https://images.unsplash.com/photo-1575936123452-b67c3203c357?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8fDA%3D&w=1000&q=80'
+      image: url
     })
     if (!newUser) {
       res.status(500)

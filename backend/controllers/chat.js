@@ -1,9 +1,10 @@
 import Room from '../models/Room.js'
+import Message from '../models/Message.js'
 
 export const getUserRooms = async (req, res, next) => {
   const {_id: userID} = req.user
   try {
-    const rooms = await Room.find({users: {$in: userID}}).populate('users', ['image', 'fullname']).populate('latestMsg')
+    const rooms = await Room.find({users: {$in: userID}}).populate('users', ['image', 'fullname']).populate('latestMsg').sort('-updatedAt')
     res.json(rooms)
   } catch (error) {
     next(error)
@@ -34,10 +35,13 @@ export const addRoom = async (req, res, next) => {
 
 export const getRoomByID = async (req, res, next) => {
   const roomID = req.params.roomID
+  const {_id: sessionID} = req.user
   try {
     // check if user in this room else redirect to a9
     let roomRedID = ''
-    const lastRoomID = '64fc806cfc94db07530d86a9'
+//{room: lastRoomID} 
+    const {room: lastRoomID}  = await Message.findOne({sender: sessionID}).sort('-createdAt')
+    //console.log('lastRoomID', uuu)
     if (!roomID.match(/^[0-9a-fA-F]{24}$/)) {
       roomRedID = lastRoomID
     } else {

@@ -5,11 +5,14 @@ import Signup from './pages/Signup'
 import Chat from './pages/Chat'
 import Explore from './pages/Explore'
 import Profile from './pages/Profile'
-import AddPost from './pages/AddPost'
+import Post from './pages/Post'
 
 import RequireAuth from './components/RequireAuth'
 import AlertModel from './components/AlertModel'
 import AuthProvider from './context/AuthProvider'
+
+import AddPost from './components/posts/AddPost'
+import UpdatePost from './components/posts/UpdatePost'
 
 const App = () => {
   return (
@@ -27,7 +30,10 @@ const App = () => {
           <Route path='/explore' element={<Explore />} />
           <Route path='/profile' element={<Profile />} />
           <Route path='/profile/:userID' element={<Profile />} />
-          <Route path='/add-post' element={<AddPost />} />
+          <Route element={<Post />}>
+            <Route path='/post/add' element={<AddPost />} />
+            <Route path='/post/:postID/update' element={<UpdatePost />} />
+          </Route>
         </Route>
       </Routes>
     </>

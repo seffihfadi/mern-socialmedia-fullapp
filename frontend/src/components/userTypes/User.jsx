@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-const User = ({ user }) => {
+const User = ({ user, span }) => {
   return (
     <>
       <Link className="flex items-center gap-3" to={`/profile/${user._id}`}>
@@ -8,7 +8,7 @@ const User = ({ user }) => {
         </div>
         <div className="flex flex-col">
           <h3 className="capitalize">{user.fullname}</h3>
-          <span className="text-gray-500">Active Now</span>
+          <span className="text-gray-500">{span}</span>
         </div>
       </Link>
     </>

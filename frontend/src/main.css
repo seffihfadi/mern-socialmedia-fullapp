@@ -85,9 +85,10 @@ nav{
 main {
   @apply md:pl-14 text-[#fff] pt-14 md:pt-0 /*#212427*/
 }
+/* 
 main > div {
   @apply px-4 md:px-10
-}
+} */
 
 i {
   @apply text-2xl text-[#353535]
@@ -137,29 +138,37 @@ nav a.active::before {
 form .group{
   @apply flex flex-col relative mb-8
 }
-form .group input{
+form .group.glass input,
+form .group.glass textarea,
+form .group.glass select{
+  @apply bg-glass border-[1px] border-[#353535]
+}
+form .group input,
+form .group textarea,
+form .group select{
   @apply px-5 py-3 rounded-lg outline-none border-2 border-gray-500
 }
 form .group input[type='password']{
   @apply tracking-[.2rem]
 }
+form .group.glass label{
+  @apply bg-transparent text-white backdrop-blur-sm
+}
 form .group label{
-  @apply text-sm capitalize absolute top-3.5 left-4 bg-white px-2 text-gray-500 transition-all rounded-full
+  @apply text-sm capitalize absolute top-3.5 left-4 bg-white px-3 text-gray-500 transition-all rounded-full
   cursor-text select-none
 }
 form .group input:valid ~ label,
-form .group input:focus ~ label{
-  @apply -top-3 left-2
+form .group input:focus ~ label,
+form .group textarea:valid ~ label,
+form .group textarea:focus ~ label,
+form .group select:valid ~ label,
+form .group select:focus ~ label{
+  @apply -top-3.5 left-2
 }
 
-/* form .group .msg{
-  @apply flex items-center gap-2 text-red-800 text-sm 
-}
-form .group .msg i{
-  @apply text-[20px]
-} */
-
-.sign button {
+.sign button,
+button.gradient {
   @apply purple_gradient_bg py-2.5 px-4 rounded-lg text-white font-semibold capitalize
 }
 
@@ -259,15 +268,11 @@ input.glass {
 } 
 
 ::-webkit-scrollbar {
-  @apply z-0
+  @apply w-0
 }
-/* 
-.explore{
-  @apply p-0
-}
-
-.explore .search {
-  @apply fixed overflow-y-auto h-screen w-[400px] bg-glass
+/*
+::-webkit-scrollbar-thumb {
+  @apply w-0
 } */
 
 .glassmodel{
@@ -327,7 +332,7 @@ button:disabled{
 
 /* loader  */
 .loading{
-  @apply h-full w-full flex justify-center flex-col items-center fixed z-30 left-0 top-0
+  @apply h-full w-full flex justify-center flex-col items-center absolute z-10 left-0 top-0 backdrop-blur-lg
 }
 .circul_loader {
   position: relative;
@@ -433,4 +438,43 @@ button:disabled{
 }
 .center .ctr p {
   @apply text-white font-bold
+}
+
+.postconfig {
+  @apply px-20 pt-4
+}
+.postconfig .formarea {
+  @apply my-8 col-span-12 md:col-span-10
+}
+
+.imgscol{
+  @apply grid grid-cols-12 w-full gap-2
+} 
+
+.imgscol .imgcol {
+  @apply col-span-12 max-h-[45vh] relative
+}
+.imgscol.num-3 .imgcol,
+.imgscol.num-2 .imgcol {
+  @apply max-h-[35vh]
+}
+.imgscol.num-3 .imgcol:nth-child(3),
+.imgscol.num-3 .imgcol:nth-child(2) {
+  @apply col-span-6
+}
+.imgscol img{
+  @apply object-cover w-full h-full rounded-lg
+}
+
+.imgscol .imgcol button {
+  @apply absolute right-0 top-0 p-3
+}
+
+
+.feed .post {
+  @apply p-3 bg-glass rounded-2xl flex flex-col gap-3 my-6
+}
+
+.feed .post i{
+  @apply text-white text-[25px]
 }

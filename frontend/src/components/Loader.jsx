@@ -1,21 +1,19 @@
-import { useState } from 'react';
-//import { useNavigate } from 'react-router-dom';
-import { useAlert } from '../context/AlertProvider';
+import { useEffect, useState } from 'react';
 
-const Loader = ({ msg }) => {
+const Loader = ({ msg, sm=false }) => {
   const [timeOut, setTimeOut] = useState(false);
   //const navigate = useNavigate();
-  const [setAlert] = useAlert()
+  //const [setAlert] = useAlert()
+    const time = setTimeout(() => {
+      setTimeOut(true)
+    }, 2e4);
+  
+    if (timeOut) {
+      clearTimeout(time)
+      alert('time out, check your connection')
+    }
 
-  const time = setTimeout(() => {
-    setTimeOut(true)
-  }, 30000);
-
-  if (timeOut) {
-    clearTimeout(time)
-    setAlert({type: 'error', text: 'time out, check your connection'})
-  }
-
+ // if (timeOut) setAlert({type: 'error', text: 'time out, check your connection'})
   return (
     <>
       {!timeOut && (
@@ -26,7 +24,7 @@ const Loader = ({ msg }) => {
                 className="path"
                 cx={50}
                 cy={50}
-                r={20}
+                r={sm?12:20}
                 fill="none"
                 strokeWidth={2}
                 strokeMiterlimit={10}

@@ -1,4 +1,5 @@
 import * as yup from 'yup'
+import {calculateBase64Size} from './code'
 
 export const SignInValidation =  yup.object().shape({
   email: yup
@@ -30,6 +31,20 @@ export const SignUpValidation = yup.object().shape({
     .test("is-exist", "Profile image is required", (value) => {
       return value.size > 0 
     }).test("isnot-big", "This image is too big", (value) => {
-      return value.size < 500000  // 500kb
+      return value.size < 2 * 1024 * 1024 // 500kb
     })
 })
+
+
+
+const imageSchema = yup.string().test({
+  name: 'maxSize',
+  test: function (value) {
+    const maxSizeBytes = 2 * 1024 * 1024; //500kb*2 = 1mb
+    const sizeInBytes = calculateBase64Size(value);
+    return sizeInBytes <= maxSizeBytes;
+  },
+  message: 'image size too large',
+});
+
+export const ImageUploadValidation = yup.array().of(imageSchema);

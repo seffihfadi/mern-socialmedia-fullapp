@@ -6,7 +6,7 @@ const privat = async (req, res, next) => {
     const token = req.cookies.zoquixToken
     if (!token) {
       res.status(401)
-      throw new Error('not authorized, please login')
+      throw new Error('session expired, please login')
     }
     const verified = jwt.verify(token, process.env.JWT_SECRET)
     

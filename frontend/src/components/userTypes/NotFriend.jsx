@@ -19,7 +19,7 @@ const NotFriend = ({ user }) => {
         </div>
       </Link>
       {isConnection ? 
-        <Link className="ml-auto text-gray-500" to={`chat/${user._id}`}>
+        <Link className="ml-auto text-gray-500" to={`/chat`}>
           <i className="uil uil-comment-lines"></i>
         </Link>
       : !isMe && <AddConnection userID={user._id} />
