@@ -17,11 +17,11 @@ const AddPost = () => {
         const response = await axios.post('http://127.0.0.1:4000/api/post/create', postForm, {withCredentials: true})
         //console.log('response', response)
         setAlert({type: 'success', text: response.data.message})
-        navigate('/', {replace: true})
       } catch (error) {
         setAlert({type: 'error', text: error.response.data.message})
       } finally {
         setPostForm(null)
+        navigate('/', {replace: true})
       }
     })()
   }, [postForm])

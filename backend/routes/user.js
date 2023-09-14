@@ -5,9 +5,9 @@ import {
   signoutUser, 
   signupUser, 
   getAllUsers,
-  getUserByID
+  getUserByID, 
+  updateProfile
 } from '../controllers/user.js'
-//import imageUpload from '../middlewares/imageUpload.js'
 
 import multer from "multer";
 import privat from '../middlewares/auth.js';
@@ -24,5 +24,6 @@ userRoutes.get('/signout', signoutUser)
 userRoutes.get('/getuser', privat, getUser)
 userRoutes.get('/getusers', privat, getAllUsers)
 userRoutes.get('/:userID', privat, getUserByID)
+userRoutes.patch('/update', privat, updateProfile)
 
 export default userRoutes

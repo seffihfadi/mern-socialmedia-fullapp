@@ -20,7 +20,7 @@ const AddConnection = ({ userID }) => {
   }
 
   return (
-    <button disabled={sending} onClick={handleAddConnection} className='ml-auto text-gray-500'>
+    <button disabled={sending} onClick={handleAddConnection} className='ml-auto'>
       <i className="uil uil-user-plus"></i>
     </button> 
   )

@@ -4,20 +4,20 @@ const Loader = ({ msg, sm=false }) => {
   const [timeOut, setTimeOut] = useState(false);
   //const navigate = useNavigate();
   //const [setAlert] = useAlert()
-    const time = setTimeout(() => {
-      setTimeOut(true)
-    }, 2e4);
+    // const time = setTimeout(() => {
+    //   setTimeOut(true)
+    // }, 2e4);
   
-    if (timeOut) {
-      clearTimeout(time)
-      alert('time out, check your connection')
-    }
+    // if (timeOut) {
+    //   clearTimeout(time)
+    //   alert('time out, check your connection')
+    // }
 
  // if (timeOut) setAlert({type: 'error', text: 'time out, check your connection'})
   return (
     <>
       {!timeOut && (
-        <div className="loading">
+        <div className={`loading ${sm && 'sm'}`}>
           <div className="circul_loader">
             <svg className="circular" viewBox="25 25 50 50">
               <circle

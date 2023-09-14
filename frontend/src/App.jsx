@@ -13,6 +13,8 @@ import AuthProvider from './context/AuthProvider'
 
 import AddPost from './components/posts/AddPost'
 import UpdatePost from './components/posts/UpdatePost'
+import Edit from './components/profile/Edit'
+import ProfilePage from './components/profile/ProfilePage'
 
 const App = () => {
   return (
@@ -24,12 +26,16 @@ const App = () => {
         <Route path='/signup' element={<Signup />} />
         {/* privat routes */}
         <Route element={<AuthProvider><RequireAuth /></AuthProvider>}>
+          
           <Route path='/' element={<Home />} />
           <Route path='/chat/:roomID' element={<Chat />} />
           <Route path='/chat' element={<Chat />} />
           <Route path='/explore' element={<Explore />} />
-          <Route path='/profile' element={<Profile />} />
-          <Route path='/profile/:userID' element={<Profile />} />
+          <Route element={<Profile />}>
+            <Route path='/profile/:userID' element={<ProfilePage />}/>
+            <Route path='/profile' element={<ProfilePage />}/>
+            <Route path='/profile/edit' element={<Edit />} />
+          </Route>
           <Route element={<Post />}>
             <Route path='/post/add' element={<AddPost />} />
             <Route path='/post/:postID/update' element={<UpdatePost />} />

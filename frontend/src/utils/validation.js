@@ -40,7 +40,7 @@ export const SignUpValidation = yup.object().shape({
 const imageSchema = yup.string().test({
   name: 'maxSize',
   test: function (value) {
-    const maxSizeBytes = 2 * 1024 * 1024; //500kb*2 = 1mb
+    const maxSizeBytes = 5 * 1024 * 1024; //500kb*2 = 1mb
     const sizeInBytes = calculateBase64Size(value);
     return sizeInBytes <= maxSizeBytes;
   },
@@ -48,3 +48,19 @@ const imageSchema = yup.string().test({
 });
 
 export const ImageUploadValidation = yup.array().of(imageSchema);
+
+
+export const EditProfileValidation = yup.object().shape({
+  
+  fullname: yup
+    .string()
+    .required('Name is required')
+    .matches(/^(?=.{4,18}$)[a-zA-Z]+ [a-zA-Z]+$/, 'name must contain two words of alphabits'),
+  bio: yup
+    .string()
+    .max(250, 'Max length of bio is 250 charecter'),
+  slogan: yup
+    .string()
+    .max(20, 'Max length of slogan is 20 charecter')
+    
+})

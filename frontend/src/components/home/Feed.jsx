@@ -3,26 +3,46 @@ import Post from "../posts/Post"
 import axios from 'axios'
 import Loader from '../Loader'
 import Empty from '../Empty'
+import PostProvider from "../../context/PostProvider"
+import { useSearchParams } from "react-router-dom"
 
-const Feed = () => {
+const Feed = ({ userID = '', setPostsCount }) => {
   const [feed, setFeed] = useState(null)
+  const [searchParams] = useSearchParams()
+  const postID = searchParams.get("post")
+  const isProfile = !!userID
+
+  const emptyText = isProfile ? "Unfortunately, this user doesn't have any posts to share with you at the moment. But don't worry, there's always more to discover and connect over!" : 'Unlock a world of possibilities - your feed awaits, discover meaningful connections today!'
+
   useEffect(() => {
     (async function () {
       try {
-        const response = await axios.get('http://127.0.0.1:4000/api/post/', {withCredentials: true})
+        const response = await axios.get(`http://127.0.0.1:4000/api/post${isProfile ? `/${userID}/posts` : ''}`, {withCredentials: true})
         setFeed(response.data)
-        console.log('response', response)
+        setPostsCount(response.data.length)
       } catch (error) {
         console.log('error', error)
       }
     })()
-  }, [])
+  }, [userID])
+
+  useEffect(() => {
+    if (!postID) return
+    (function () {
+      const postElement = document.getElementById(`post-${postID}`)
+      if (postElement) {
+        postElement.scrollIntoView({
+          behavior: 'smooth',
+        })
+      }
+    })()
+  }, [feed])
+  
   if (!feed) return <Loader msg='updating feed' sm />
-  if (feed.length < 1) return <Empty icon="postcard" text="Unlock a world of possibilities - your feed awaits, discover meaningful connections today!" type="lg" />
+  if (feed.length < 1) return <Empty icon="postcard" text={emptyText} type="lg" />
   return (
     <div className="feed">
-      {feed.map((post) => <Post key={post._id} post={post} />)}
-      
+      {feed.map((post) => <PostProvider key={post._id} post={post}><Post /></PostProvider>)}
     </div>
   )
 }

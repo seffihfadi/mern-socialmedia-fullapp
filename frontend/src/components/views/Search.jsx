@@ -8,7 +8,7 @@ import Empty from '../Empty'
 const Search = () => {
   const [search, setSearch] = useState('')
   const [data, setData] = useState([])
-  const debouncedSearch = useDebounce(search, 300)
+  const debouncedSearch = useDebounce(search, 500)
   const [setAlert] = useAlert()
 
   useEffect(() => {

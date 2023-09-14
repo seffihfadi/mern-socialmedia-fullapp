@@ -3,35 +3,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* 
-
-.backdrop{
-  background:linear-gradient(233deg, #e56420, #c22525, #3d9c31, #37bbde);
-  width:100%;
-  height:100vh;
-  background-size:cover;
-  background-blend-mode: hard-light;
-  animation: hue-rotate 8s linear infinite;
-  position: absolute;
-  @apply -z-10
-}
-
-@keyframes hue-rotate {
-  from {
-    -webkit-filter: hue-rotate(0);
-    -moz-filter: hue-rotate(0);
-    -ms-filter: hue-rotate(0);
-    filter: hue-rotate(0);
-  }
-  to {
-    -webkit-filter: hue-rotate(360deg);
-    -moz-filter: hue-rotate(360deg);
-    -ms-filter: hue-rotate(360deg);
-    filter: hue-rotate(360deg);
-  }
-} */
-
-
 body{
   font-family: 'Quicksand', sans-serif;
   @apply m-0
@@ -39,9 +10,14 @@ body{
 
 .back{
   
-  background-image: url('/bg2.jpg');
-  @apply w-screen h-screen fixed top-0 left-0 -z-10
+  background-image: url('/bg9.jpg');
+  @apply w-screen h-screen fixed top-0 left-0 -z-10 bg-center
 }
+/* 
+*[start^="@"] {
+  color: blue;
+  font-weight: bold;
+} */
 /* .back {
 	background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
 	background-size: 400% 400%;
@@ -112,10 +88,16 @@ nav a.active::before {
 }
 
 .user_img::before{
-  @apply content-[''] w-72 h-72 rounded-full border-b-0 border-l-0 -rotate-12 border-4 border-purple-700 absolute -top-4 -left-4
+  @apply content-[''] w-72 aspect-square rounded-full border-b-0 border-l-0 -rotate-12 border-4 
+  border-purple-700 absolute -top-4 -left-4
+}
+.edit .user_img::before{
+  @apply w-[75%]
 }
 
-
+.privacy-span{
+  @apply text-xs purple_gradient uppercase py-0.5 mx-2 px-2 rounded-full font-bold
+}
 
 .head_text{
   @apply purple_gradient font-extrabold my-4 capitalize
@@ -123,6 +105,10 @@ nav a.active::before {
 
 .profile .head_text{
   @apply text-lg
+}
+
+.profile .edit .head_text{
+  @apply text-3xl
 }
 
 .sign{
@@ -159,6 +145,7 @@ form .group label{
   cursor-text select-none
 }
 form .group input:valid ~ label,
+form .group input:disabled ~ label,
 form .group input:focus ~ label,
 form .group textarea:valid ~ label,
 form .group textarea:focus ~ label,
@@ -169,7 +156,11 @@ form .group select:focus ~ label{
 
 .sign button,
 button.gradient {
-  @apply purple_gradient_bg py-2.5 px-4 rounded-lg text-white font-semibold capitalize
+  @apply purple_gradient_bg py-2 px-4 rounded-lg text-white font-semibold capitalize
+}
+
+button.delete {
+  @apply bg-red-800 py-2.5 px-4 rounded-lg text-white font-semibold
 }
 
 .alert{
@@ -310,9 +301,16 @@ button:disabled{
   @apply absolute -left-4 top-48 rounded-full object-cover aspect-square last-of-type:w-6 w-8 last-of-type:left-0 last-of-type:top-6
 }
 
-
+.user_img button,
+.user_img a{
+  @apply purple_gradient_bg mx-auto flex justify-center items-center rounded-full h-10 w-10
+}
+.user_img .button i ,
+.user_img a i{
+  @apply text-white text-[20px]
+} 
 .profile .box {
-  @apply col-span-6 md:col-span-3 rounded-lg p-6 flex-col flex
+  @apply col-span-4 lg:col-span-3 rounded-lg p-6 flex-col flex
 }
 
 .profile .box h1{
@@ -332,7 +330,7 @@ button:disabled{
 
 /* loader  */
 .loading{
-  @apply h-full w-full flex justify-center flex-col items-center absolute z-10 left-0 top-0 backdrop-blur-lg
+  @apply h-full w-full flex justify-center flex-col items-center absolute z-10 left-0 top-0
 }
 .circul_loader {
   position: relative;
@@ -447,6 +445,10 @@ button:disabled{
   @apply my-8 col-span-12 md:col-span-10
 }
 
+.postconfig .formarea form{
+  @apply mt-8
+}
+
 .imgscol{
   @apply grid grid-cols-12 w-full gap-2
 } 
@@ -454,9 +456,10 @@ button:disabled{
 .imgscol .imgcol {
   @apply col-span-12 max-h-[45vh] relative
 }
+
 .imgscol.num-3 .imgcol,
 .imgscol.num-2 .imgcol {
-  @apply max-h-[35vh]
+  @apply aspect-[16/6.5] w-full
 }
 .imgscol.num-3 .imgcol:nth-child(3),
 .imgscol.num-3 .imgcol:nth-child(2) {
@@ -476,5 +479,107 @@ button:disabled{
 }
 
 .feed .post i{
-  @apply text-white text-[25px]
+  @apply text-white text-[23px]
+}
+
+.feed .post button.reaction .active{
+  @apply purple_gradient
+}
+
+.feed .post a {
+  @apply flex justify-center items-center
+}
+
+
+div:has(.loading.sm) {
+  @apply relative min-h-[30vh]
+}
+.comments{
+  @apply relative
+}
+.comments .comment{
+  @apply flex gap-4 items-start my-3
+}
+.comments .replays{
+  @apply ml-14 border-l-2 border-[#353535] pl-3 py-2
+}
+.comments .replays img{
+  @apply w-8 h-8
+}
+.comments .comment p{
+  @apply max-w-md
+}
+.comments .comment h3{
+  @apply font-bold text-[16px] capitalize mb-2
+}
+.comments .comment span{
+  @apply text-gray-600 text-[16px] font-normal ml-3
+}
+
+.post .write_comment input{
+  @apply w-full pl-12
+}
+
+
+/* feed */
+.explore {
+  @apply px-8
+}
+.container {
+  @apply mx-auto px-4
+}
+.explore .pins{
+  @apply columns-1 md:columns-2 lg:columns-3 gap-6 py-20
+}
+
+.explore .pins .pin{
+  @apply mb-6 hover:shadow-md transition-shadow rounded-xl relative overflow-hidden
+}
+.explore .pins .pin > img{
+  @apply h-full rounded-xl object-cover w-full
+}
+.explore .pins .pin:hover .hov{
+  @apply cursor-pointer translate-x-0 opacity-100
+}
+.explore .pins .pin .hov {
+  @apply absolute h-full w-full flex rounded-xl p-2 translate-x-[-100%]
+  flex-col justify-between transition-all opacity-0 duration-300 z-10
+} 
+
+.explore .pins .pin .hov img{
+  @apply w-9 h-9
+}
+.explore .pins .pin .hov h3{
+  @apply lowercase
+}
+.explore .pins .pin .hov span{
+  @apply text-sm text-gray-300
+}
+.explore .pins .pin .hov .savedown{
+  @apply flex items-center gap-3
+}
+.explore .pins .pin .hov .savedown i {
+  @apply text-[17px]  text-white
+}
+.explore .pins .pin .hov .savedown button,
+.explore .pins .pin .hov .savedown a{
+  @apply bg-[#313131bd] hover:bg-[#424242bd] w-9 rounded-full aspect-square transition-all 
+  flex justify-center items-center
+}
+
+
+.explore .search{
+  @apply w-full flex justify-end items-center flex-col gap-2
+}
+
+.explore .search input{
+  @apply w-[70%] py-3 px-6
+}
+
+.explore .search .tags {
+  @apply flex gap-5 max-w-[70%] p-2 overflow-x-scroll
+}
+
+.explore .search .tags .tag {
+  @apply cursor-pointer purple_gradient font-semibold whitespace-nowrap 
 }

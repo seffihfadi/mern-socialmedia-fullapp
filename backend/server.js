@@ -9,6 +9,7 @@ import errorHandler from './middlewares/error.js'
 import userRoutes from "./routes/user.js"
 import chatRoutes from "./routes/chat.js"
 import postRoutes from "./routes/post.js"
+import commentRoutes from './routes/comment.js'
 import messagesRoutes from "./routes/messages.js"
 import connectionRequestsRoutes from "./routes/connectionRequests.js"
 
@@ -31,10 +32,11 @@ app.use(cookieParser())
 // routes middlewares
 
 app.use('/api/user', userRoutes)
-app.use('/api/connection-requests', connectionRequestsRoutes)
 app.use('/api/chat', chatRoutes)
-app.use('/api/messages', messagesRoutes)
 app.use('/api/post', postRoutes)
+app.use('/api/comments', commentRoutes)
+app.use('/api/messages', messagesRoutes)
+app.use('/api/connection-requests', connectionRequestsRoutes)
 
 // error middlewares
 app.use(errorHandler)

@@ -6,11 +6,21 @@ const Connections = ({ user }) => {
   const connections = user.connections
   const {_id: sessionID} = useAuth()
   //console.log('connections', connections)
-  if (connections.length < 1 && sessionID === user._id) return <Empty icon="user-plus" type="sm" text="try to find connections" />
-  if (connections.length < 1 && sessionID !== user._id) return <Empty icon="user-plus" type="sm" text={`${user.fullname} don't have any connection yet`} />
+  if (connections.length < 1) {
+    return (
+      <Empty 
+        icon="user-plus" 
+        type="sm" 
+        text={sessionID === user._id 
+          ? "try to find connections" 
+          : `${user.fullname} don't have any connection yet`
+        } 
+      />
+    )
+  } 
   return (
     <div className="connections overflow-y-auto">
-      {connections.map((connection) => <Connection key={connection.id} user={connection} type='notfriend' />)}
+      {connections.map((connection, i) => <Connection key={i} user={connection} type='notfriend' />)}
     </div>
   )
 }

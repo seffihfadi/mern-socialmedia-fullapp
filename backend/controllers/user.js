@@ -164,3 +164,42 @@ export const getUserByID = async (req, res, next) => {
   }
 }
 
+
+export const updateProfile = async (req, res, next) => {
+  const {fullname, slogan, bio, image} = req.body
+  const user = req.user
+  try {
+    const updatedDoc = {}
+    if (user.fullname !== fullname) {
+      updatedDoc.fullname = fullname
+    }
+
+    if (user.bio !== bio) {
+      updatedDoc.bio = bio
+    }
+
+    if (user.slogan !== slogan) {
+      updatedDoc.slogan = slogan
+    }
+
+    if (image !== '') {
+      const {secure_url: url} = await cloudinary.uploader.upload(image, {
+        folder: "Zoquix",
+      })
+      updatedDoc.image = url
+    }
+    if (Object.keys(updatedDoc).length === 0) {
+      res.status(200).json({message: 'you did not change any thing'})
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(user._id, updatedDoc)
+    if (!updatedUser) {
+      res.status(500)
+      throw new Error('failed to update profile')
+    }
+
+    res.status(200).json({message: 'your profile updated successfuly'})
+  } catch (error) {
+    next(error)
+  }
+}

@@ -24,10 +24,12 @@ const userSchema = new Schema({
   bio: {
     type: String,
     min: [5, 'bio too short'],
-    max: [250, 'bio too long']
+    max: [250, 'bio too long'],
+    default: ''
   }, 
   slogan: {
-    type: String
+    type: String,
+    default: ''
   },
   connections: [{
     type: Types.ObjectId,

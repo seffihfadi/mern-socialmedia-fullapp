@@ -39,7 +39,7 @@ const Signup = () => {
       navigate('/', {replace: true})
 
     } catch (error) {
-      console.log('error', error)
+      //console.log('error', error)
       const errorMsg = error.name === 'AxiosError' ? error.response.data.message : error.errors[0]
       setAlert({text: errorMsg, type: 'error'})
     } finally {
@@ -92,8 +92,8 @@ const Signup = () => {
               <label htmlFor="password">password</label>
             </div>
             <div className="flex justify-between items-center">
-              <Link to='/signin'>Or Sign In</Link>
-              <button disabled={loading}>sign up {loading && '...'}</button>
+              <Link to='/signin'>Or SignIn</Link>
+              <button disabled={loading}>sign up</button>
             </div>
           </form>
         </div>

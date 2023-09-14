@@ -27,10 +27,10 @@ const postSchema = new Schema({
   tags: [{
     type: String
   }],
-  comments: [{
-    type: Types.ObjectId,
-    ref: 'Comment'
-  }],
+  comments: {
+    type: Number,
+    default: 0
+  },
   reactions: [{
     type: Types.ObjectId,
     ref: 'User'
@@ -42,6 +42,10 @@ const postSchema = new Schema({
 }, {
   timestamps: true
 })
+
+// postSchema.virtual('isLiked', function() {
+
+// })
 
 const Post = model('Post', postSchema)
 export default Post
