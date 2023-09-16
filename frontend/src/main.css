@@ -10,7 +10,7 @@ body{
 
 .back{
   
-  background-image: url('/bg9.jpg');
+  background-image: url('/bg2.jpg');
   @apply w-screen h-screen fixed top-0 left-0 -z-10 bg-center
 }
 /* 
@@ -61,10 +61,10 @@ nav{
 main {
   @apply md:pl-14 text-[#fff] pt-14 md:pt-0 /*#212427*/
 }
-/* 
-main > div {
-  @apply px-4 md:px-10
-} */
+
+main > div:not(.loading, .chat) {
+  @apply max-w-7xl mx-auto
+}
 
 i {
   @apply text-2xl text-[#353535]
@@ -91,9 +91,7 @@ nav a.active::before {
   @apply content-[''] w-72 aspect-square rounded-full border-b-0 border-l-0 -rotate-12 border-4 
   border-purple-700 absolute -top-4 -left-4
 }
-.edit .user_img::before{
-  @apply w-[75%]
-}
+
 
 .privacy-span{
   @apply text-xs purple_gradient uppercase py-0.5 mx-2 px-2 rounded-full font-bold
@@ -209,7 +207,8 @@ button.delete {
 .chat .connection {
   @apply relative
 }
-.chat .connection.active::before {
+.chat .connection.active::before, 
+.note.active::before {
   @apply absolute rounded-full right-0 w-2 h-2 purple_gradient_bg content-[''] top-[calc(50%-4px)]
 }
 input.glass {
@@ -491,7 +490,7 @@ button:disabled{
 }
 
 
-div:has(.loading.sm) {
+.ldr_data:has(.loading.sm) {
   @apply relative min-h-[30vh]
 }
 .comments{

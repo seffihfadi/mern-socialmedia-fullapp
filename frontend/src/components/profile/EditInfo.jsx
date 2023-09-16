@@ -35,7 +35,7 @@ const EditInfo = ({image}) => {
   }
   
   return (
-    <form onSubmit={handleSubmit}  noValidate>
+    <form className="mb-20" onSubmit={handleSubmit}  noValidate>
       <div className="group glass">
         <input defaultValue={userProfile.fullname} id="fullname" name="fullname" type="text" required />
         <label htmlFor="fullname">full name</label>

@@ -62,7 +62,7 @@ const Signin = () => {
           </div>
           <div className="flex justify-between items-center">
             <Link to='/signup'>Or Sign Up</Link>
-            <button disabled={loading}>sign in {loading && '...'}</button>
+            <button disabled={loading}>sign in</button>
           </div>
         </form>
       </div>

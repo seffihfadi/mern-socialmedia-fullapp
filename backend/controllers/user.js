@@ -113,7 +113,9 @@ export const signoutUser = async (req, res, next) => {
 export const getUser = async (req, res, next) => {
   try {
     if (!!req.user) {
-      res.status(200).json({user: req.user})
+      const userSession = req.user
+      userSession.password = undefined
+      res.status(200).json({user: userSession})
     }
   } catch (error) {
     next(error)
@@ -199,6 +201,38 @@ export const updateProfile = async (req, res, next) => {
     }
 
     res.status(200).json({message: 'your profile updated successfuly'})
+  } catch (error) {
+    next(error)
+  }
+}
+
+
+export const changePassword = async (req, res, next) => {
+  const {oldpass, newpass} = req.body
+  const user = req.user
+  try {
+    if (!newpass || !oldpass) {
+      res.status(400)
+      throw new Error('invalid data provided')
+    }
+    if (newpass === oldpass) {
+      res.status(200).json({message: 'password updated successfully'})
+    }
+
+    const hashPass = user.password
+    const isMatch = bcrypt.compareSync(oldpass, hashPass)
+    if (!isMatch) {
+      res.status(400)
+      throw new Error('current password is wrong!')
+    } else {
+
+      const profile = await User.findById(user._id)
+      profile.password = newpass
+      profile.save()
+  
+      res.status(200).json({message: 'password updated successfully'})
+    }
+
   } catch (error) {
     next(error)
   }

@@ -15,17 +15,18 @@ const WriteComment = ({ postID, commentID, owner }) => {
     if (!owner) return
     setComment(tagName(owner.fullname) + ' ')
     inputRef.current.focus()
-    owner = {}
+    //owner = {}
   }, [owner])
 
   const handleCreateComment = async (e) => {
     e.preventDefault()
-    if (!comment) return
+    //if (!comment) return
     setComment('')
+    const replayFor = owner?._id
 
     try {
       const response = await axios.post('http://127.0.0.1:4000/api/comments/create', 
-        {comment, postID, commentID}, {withCredentials: true}
+        {comment, postID, commentID, replayFor}, {withCredentials: true}
       )
       console.log('response', response)
       setAlert({type: 'success', text: response.data.message})

@@ -40,6 +40,7 @@ const Search = () => {
           className='glass w-full' 
           placeholder='Search' 
           type="text" 
+          onClick={(e) => {e.stopPropagation()}}
         />
         {!!search &&
           <button onClick={() => {setSearch('')}} className='absolute right-2 top-[0.25rem]'>

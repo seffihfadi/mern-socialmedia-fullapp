@@ -64,9 +64,8 @@ const Nav = () => {
         </button>
       </div>
     </nav>
-    <GlassModel displayed={displayModel} type={modelType} />
+    <GlassModel displayed={displayModel} type={modelType} setDisplayModel={setDisplayModel} />
     </>
-
   )
 }
 

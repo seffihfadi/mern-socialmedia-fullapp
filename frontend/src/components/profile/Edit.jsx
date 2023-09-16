@@ -32,12 +32,12 @@ const Edit = () => {
     
   return (
     <>
-      <div className="col-span-12 md:col-span-5 edit">
-        <div className="sticky top-4">
-
-          <h1 className="head_text">Update Your Profile!</h1>
-          <p className="text-lg">Explore fresh and intriguing encounters while forming valuable connections with others by sharing your own story.</p>
-
+      <div className="col-span-12 edit">
+        <h1 className="head_text">Update Your Profile!</h1>
+        <p className="text-lg max-w-xl">Explore fresh and intriguing encounters while forming valuable connections with others by sharing your own story.</p>
+      </div>
+      <div className="col-span-12 md:col-span-5">
+        <div className="sticky top-40">
           <div className="flex flex-col justify-center items-center gap-5 my-10">
             <div className="relative">
               <img 

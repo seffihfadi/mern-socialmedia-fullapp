@@ -48,7 +48,7 @@ const ProfilePage = () => {
         <div className="col-span-12 xl:col-span-9 grid grid-cols-12 gap-8">
           <div className="col-span-12 md:col-span-9 lg:col-span-8">
             <h1 className="head_text">posts</h1>
-            <div className="relative">
+            <div className="ldr_data">
               <Feed userID={userProfile._id} setPostsCount={setPostsCount}  />
             </div>
           </div>

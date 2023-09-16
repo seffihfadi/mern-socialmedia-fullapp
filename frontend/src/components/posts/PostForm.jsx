@@ -3,6 +3,8 @@ import { useCallback, useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 import { useAlert } from "../../context/AlertProvider"
 import {ImageUploadValidation} from '../../utils/validation'
+import { motion } from 'framer-motion'
+import { FadeUp } from "../../utils/animation/fadeUpAnimation"
 
 const PostForm = ({type, postForm, setPostForm}) => {
 
@@ -61,7 +63,7 @@ const PostForm = ({type, postForm, setPostForm}) => {
   }
 
   return (
-    <form onSubmit={handleSubmit} noValidate>
+    <motion.form {...FadeUp} onSubmit={handleSubmit} noValidate>
       <div className="group glass">
         <textarea defaultValue={isUpdate ? postForm.desc : ''} name="desc" id="desc" rows="2" maxLength={250} required></textarea>
         <label htmlFor="desc">post description</label>
@@ -117,7 +119,7 @@ const PostForm = ({type, postForm, setPostForm}) => {
           {sending ? type.substring(0, type.length - 1) + 'ing' : type}
         </button>
       </div>
-    </form>
+    </motion.form>
   )
 }
 

@@ -12,14 +12,14 @@ const Feed = ({ userID = '', setPostsCount }) => {
   const postID = searchParams.get("post")
   const isProfile = !!userID
 
-  const emptyText = isProfile ? "Unfortunately, this user doesn't have any posts to share with you at the moment. But don't worry, there's always more to discover and connect over!" : 'Unlock a world of possibilities - your feed awaits, discover meaningful connections today!'
+  const emptyText = isProfile ? "Unfortunately, there is no posts at the moment. there's always more to discover and connect over!" : 'Unlock a world of possibilities - your feed awaits, discover meaningful connections today!'
 
   useEffect(() => {
     (async function () {
       try {
         const response = await axios.get(`http://127.0.0.1:4000/api/post${isProfile ? `/${userID}/posts` : ''}`, {withCredentials: true})
         setFeed(response.data)
-        setPostsCount(response.data.length)
+        isProfile && setPostsCount(response.data.length)
       } catch (error) {
         console.log('error', error)
       }

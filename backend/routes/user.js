@@ -6,7 +6,8 @@ import {
   signupUser, 
   getAllUsers,
   getUserByID, 
-  updateProfile
+  updateProfile,
+  changePassword
 } from '../controllers/user.js'
 
 import multer from "multer";
@@ -25,5 +26,6 @@ userRoutes.get('/getuser', privat, getUser)
 userRoutes.get('/getusers', privat, getAllUsers)
 userRoutes.get('/:userID', privat, getUserByID)
 userRoutes.patch('/update', privat, updateProfile)
+userRoutes.patch('/change-password', privat, changePassword)
 
 export default userRoutes

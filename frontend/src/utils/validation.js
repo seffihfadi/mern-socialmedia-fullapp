@@ -64,3 +64,15 @@ export const EditProfileValidation = yup.object().shape({
     .max(20, 'Max length of slogan is 20 charecter')
     
 })
+
+export const ChangePassValidation = yup.object().shape({
+  oldpass: yup
+    .string()
+    .required("Please enter a your current password")
+    .min(8, "This password is not valid"),
+  newpass: yup
+    .string()
+    .required("Please enter a new password")
+    .min(8, "Password must have at least 8 characters")
+  
+})

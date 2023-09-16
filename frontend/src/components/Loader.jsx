@@ -1,19 +1,7 @@
 import { useEffect, useState } from 'react';
 
 const Loader = ({ msg, sm=false }) => {
-  const [timeOut, setTimeOut] = useState(false);
-  //const navigate = useNavigate();
-  //const [setAlert] = useAlert()
-    // const time = setTimeout(() => {
-    //   setTimeOut(true)
-    // }, 2e4);
-  
-    // if (timeOut) {
-    //   clearTimeout(time)
-    //   alert('time out, check your connection')
-    // }
-
- // if (timeOut) setAlert({type: 'error', text: 'time out, check your connection'})
+  const [timeOut, setTimeOut] = useState(false)
   return (
     <>
       {!timeOut && (
@@ -31,7 +19,7 @@ const Loader = ({ msg, sm=false }) => {
               />
             </svg>
           </div>
-          { msg && <p>{ msg }</p> }
+          { msg && <p className='capitalize text-sm'>{ msg }</p> }
         </div>
       )}
     </>

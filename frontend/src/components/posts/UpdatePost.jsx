@@ -63,13 +63,12 @@ const UpdatePost = () => {
   return (
     <div className="formarea">
       <h1 className="head_text text-xl">Update Your Post</h1>
-      <div>
+      <div className='ldr_data'>
         {postForm 
         ? <PostForm type='Update' postForm={postForm} setPostForm={setPostForm} />
         : <Loader sm={true} msg='loading' />
         }
       </div>
-
 
       <h1 className="head_text text-xl">Delete The Post</h1>
       <p>This action will result in the removal of all comments, reactions, and views associated with the post.</p>

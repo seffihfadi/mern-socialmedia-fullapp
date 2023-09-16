@@ -2,7 +2,7 @@ import { motion, AnimatePresence} from 'framer-motion'
 import Search from './views/Search'
 import Notifications from './views/Notifications'
 
-const GlassModel = ({ displayed, type }) => {
+const GlassModel = ({ displayed, type, setDisplayModel }) => {
   return (
     <AnimatePresence>
       {displayed && 
@@ -11,6 +11,7 @@ const GlassModel = ({ displayed, type }) => {
         animate={{x:0}} 
         exit={{x: -400}} 
         className='glassmodel'
+        onClick={() => {setDisplayModel(false)}}
       >
         { type === 'search' ? <Search /> : <Notifications /> }
       </motion.div>

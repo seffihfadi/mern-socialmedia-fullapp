@@ -21,7 +21,7 @@ const Replays = ({ commentID }) => {
   }, [])
   return (
     
-    <div className="replays">
+    <div className="replays ldr_data">
       {replays.length !== 0
         ? replays.map((replay) => <Comment key={replay._id} comment={replay} type='replay' />) 
         : <Loader msg='loading replays' sm />

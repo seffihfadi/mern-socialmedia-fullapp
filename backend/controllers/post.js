@@ -210,7 +210,7 @@ export const getUserPosts = async (req, res, next) => {
       $or: 
         [
           {privacy: 'public'}, 
-          {privacy: 'connections', $or: [{owner: {$in: user.connections}}]},
+          {privacy: 'connections', $or: [{owner: user._id}, {owner: {$in: user.connections}}]},
           {privacy: 'privat', owner: user._id}
         ]
       })

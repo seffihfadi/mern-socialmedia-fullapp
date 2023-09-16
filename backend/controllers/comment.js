@@ -1,8 +1,9 @@
 import Comment from "../models/Comment.js"
 import Post from '../models/Post.js'
+import { sendNotification } from "./notifications.js"
 
 export const createComment = async (req, res, next) => {
-  const {comment, postID, commentID} = req.body
+  const {comment, postID, commentID, replayFor} = req.body
   const {_id: sessionID} = req.user
   try {
     const isReplay = commentID !== ''
@@ -16,7 +17,6 @@ export const createComment = async (req, res, next) => {
       req.status(400)
       throw new Error('post not found')
     }
-    
     
     const commentDoc = {
       postID,
@@ -42,6 +42,17 @@ export const createComment = async (req, res, next) => {
     
     post.comments += 1
     post.save()
+
+    // Send a notification if the sessionID (user) is not the owner of the post.
+    if (!sessionID.equals(post.owner)) {
+      // Check if this is a reply and the reply is not for the post owner.
+      if (isReplay && replayFor !== post.owner) {
+        // Notify the original commenter that there's a reply to their comment.
+        await sendNotification(sessionID, replayFor, 'replay to your comment', `/?post=${postID}`);
+      }
+      // Notify the owner that someone has commented on their post.
+      await sendNotification(sessionID, post.owner, 'commented on your post', `/profile?post=${postID}`);
+    }
 
     res.status(201).json({message: `your ${isReplay ? 'replay' : 'comment'} has been successfully published!`})
 
