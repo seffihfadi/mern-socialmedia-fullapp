@@ -10,7 +10,7 @@ body{
 
 .back{
   
-  background-image: url('/bg2.jpg');
+  background-image: url('/bg.jpg');
   @apply w-screen h-screen fixed top-0 left-0 -z-10 bg-center
 }
 /* 
@@ -192,7 +192,7 @@ button.delete {
 }
 
 .chat .left{
-  @apply w-[21.5rem] border-r-[1px] border-[#323232] px-5 py-3 flex-shrink-0 bg-glass
+  @apply w-[21.5rem] h-screen border-r-[1px] border-[#323232] px-5 py-3 flex-shrink-0 bg-glass
 }
 
 .chat .center {
@@ -219,11 +219,11 @@ input.glass {
 }
 
 .chat .center .msg{
-  @apply flex flex-col gap-1
+  @apply flex flex-col my-3
 }
 
 .chat .center .msg .text {
-  @apply max-w-md text-sm bg-glass px-5 py-4 rounded-xl overflow-hidden z-10
+  @apply max-w-md text-[15px] bg-glass px-5 py-2.5 rounded-lg overflow-hidden z-10
 }
 
 .chat .center .msg .text.img{

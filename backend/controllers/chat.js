@@ -39,16 +39,19 @@ export const getRoomByID = async (req, res, next) => {
   try {
     // check if user in this room else redirect to a9
     let roomRedID = ''
-//{room: lastRoomID} 
-    const {room: lastRoomID}  = await Message.findOne({sender: sessionID}).sort('-createdAt')
-    //console.log('lastRoomID', uuu)
+    
     if (!roomID.match(/^[0-9a-fA-F]{24}$/)) {
+      const lastChat = await Room.findOne({users: {$in: sessionID}}).sort('-updatedAt')
+      if (!lastChat) {
+        res.status(200).json({})
+      }
+      const {_id: lastRoomID} = lastChat
       roomRedID = lastRoomID
     } else {
       const isRoomFound = await Room.findById(roomID)
       roomRedID = !isRoomFound ? lastRoomID : roomID
     }
-
+    
     const room = await Room.findById(roomRedID).populate('users', ['image', 'fullname']).populate('latestMsg')
     res.status(200).json(room)
     

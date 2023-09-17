@@ -1,21 +1,26 @@
 import axios from "axios"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useAlert } from "../../context/AlertProvider"
 import { useAuth } from "../../context/AuthProvider"
 import TimeAgo from 'react-timeago'
 import Empty from "../Empty"
-import { useRoom } from "../../context/RoomProvider"
+import Loader from "../Loader"
+import { useRoom, useNewMsg } from "../../context/RoomProvider"
 
 const Messages = () => {
   const {_id: roomID} = useRoom()
-  const {_id: sessionID} = useAuth()
+  const user = useAuth()
   const [setAlert] = useAlert()
-  const [messages, setMessages] = useState([])
+  const [messages, setMessages] = useState(null)
+  const [newMessage, setNewMessage] = useNewMsg()
+  
+  const chatContainerRef = useRef()
+  
   useEffect(() => {
     (async function() {
       try {
         const response = await axios.get(`http://127.0.0.1:4000/api/messages/${roomID}`, {withCredentials: true})
-        console.log('response', response)
+        console.log('response messages', response)
         setMessages(response.data)
 
       } catch (error) {
@@ -25,11 +30,28 @@ const Messages = () => {
   }, [roomID])
 
 
-  if (messages.length < 1) return <div className="ctr"><Empty icon="comments-alt" text="the conversation is empty" /></div>
+
+  useEffect(() => {
+    if (!newMessage.content) return
+    setMessages([...messages, newMessage])
+  }, [newMessage.content])
+
+  useEffect(() => {
+    const scrollToBottom = () => {
+      if (chatContainerRef.current) {
+        chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight
+      }
+    }
+    scrollToBottom()
+  }, [messages])
+
+
+  if(!messages) return <Loader sm msg='loading' />
+  if (messages.length < 1) return <Empty icon="comments-alt" text="the conversation is empty" />
   return (
-    <div className="msgs h-full overflow-y-auto px-6">
+    <div ref={chatContainerRef} className="msgs h-full overflow-y-auto px-6">
       {messages.map((message) => 
-      message.sender._id === sessionID ? (
+      message.sender._id === user._id ? (
         <div key={message._id} className="msg me">
           <div className="in sendin text-center">
             <span><TimeAgo date={message.createdAt} /></span>

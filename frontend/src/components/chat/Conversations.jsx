@@ -1,10 +1,9 @@
-import Connection from "../profile/Connection"
 import { useState, useEffect } from "react"
 import { useAuth } from "../../context/AuthProvider"
-import { Link } from "react-router-dom"
 import axios from "axios"
 import { useAlert } from "../../context/AlertProvider"
 import Empty from "../Empty"
+import Loader from "../Loader"
 import ChatRoom from "./ChatRoom"
 import { useRoom } from "../../context/RoomProvider"
 
@@ -12,7 +11,7 @@ const Conversations = () => {
   const activeRoom = useRoom()
   const session = useAuth()
   const [setAlert] = useAlert()
-  const [rooms, setRooms] = useState([])
+  const [rooms, setRooms] = useState(null)
   const [creatingRoom, setCreatingRoom] = useState(false)
 
   useEffect(() => {
@@ -21,7 +20,7 @@ const Conversations = () => {
       try {
         const response = await axios.get('http://127.0.0.1:4000/api/chat/', {withCredentials: true})
         setRooms(response.data)
-        //console.log('response jjjjj', response)
+        console.log('rooms', rooms)
       } catch (error) {
         setAlert({type: 'error', text: error.response.data.message})
       }
@@ -67,17 +66,20 @@ const Conversations = () => {
       }
 
       <h1 className="head_text">contacts</h1>
-      {rooms.length > 0 ?
-        rooms.map((room) => (
-          <ChatRoom 
-            key={room._id} 
-            isActive={activeRoom._id === room._id} 
-            room={room} 
-          />
-        ))
-      :
-        <Empty icon="at" type="lg" text="Unlock the potential of your network! Start by forging meaningful connections and reaching out to contacts." />
-      }
+      <div className="ldr_data">
+        {!rooms 
+        ? <Loader sm msg='geting chats' /> 
+        : rooms.length > 0 
+        ? rooms.map((room) => (
+            <ChatRoom 
+              key={room._id} 
+              isActive={activeRoom._id === room._id} 
+              room={room} 
+            />
+          )) ///return seggesions not empty
+        : <Empty icon="at" type="lg" text="Unlock the potential of your network! Start by forging meaningful connections and reaching out to contacts." />
+        }
+      </div>
 
     </div>
   )
