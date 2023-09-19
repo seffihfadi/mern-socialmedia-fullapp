@@ -13,10 +13,10 @@ const Notifications = () => {
     (async function() {
       try {
         const response = await axios.get('http://127.0.0.1:4000/api/notifications/', {withCredentials: true})
-        console.log('response', response.data)
+        //console.log('response', response.data)
         setNotification(response.data)
       } catch (error) {
-        console.log('error', error)
+        //console.log('error', error)
         setAlert({type: 'error', text: 'can not fetch notifications'})
       }
     })()

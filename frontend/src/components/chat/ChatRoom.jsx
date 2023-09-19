@@ -2,13 +2,13 @@ import Chat from "../userTypes/Chat"
 import { useAuth } from "../../context/AuthProvider"
 import { useNewMsg } from "../../context/RoomProvider"
 
-const ChatRoom = ({ room, isActive, type }) => {
+const ChatRoom = ({ room, isActive, type, one }) => {
   //console.log('room', room)
   const session = useAuth()
   const chatInfos = room.users?.filter((user) => user._id !== session._id)[0]
   const [newMessage] = useNewMsg()
 
-  const lstMsg = newMessage.room === room._id ? newMessage.content : room.latestMsg.content
+  const lstMsg = newMessage.room === room._id ? newMessage.content : room.latestMsg?.content
   const lstMsgDate = newMessage.room === room._id ? newMessage.createdAt : room.updatedAt
   return (
     <Chat 
@@ -19,6 +19,7 @@ const ChatRoom = ({ room, isActive, type }) => {
       lastMsg={lstMsg} 
       isActive={isActive}
       type={type}
+      one={one}
     />
   )
 }

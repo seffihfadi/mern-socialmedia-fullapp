@@ -1,6 +1,6 @@
 import Post from '../models/Post.js'
 import cloudinary from '../utils/cloudinary.js'
-import { Types } from 'mongoose'
+import Comment from '../models/Comment.js'
 
 export const createPost = async (req, res, next) => {
   const {desc, images, privacy} = req.body
@@ -142,6 +142,7 @@ export const deletePost = async (req, res, next) => {
       res.status(400)
       throw new Error('post not found !')
     }
+    await Comment.deleteMany({postID: post._id})
 
     res.status(200).json({message: 'post deleted successfuly'})
   } catch (error) {
@@ -177,6 +178,7 @@ export const getExplore = async (req, res, next) => {
 
 
 export const getTags = async (req, res, next) => {
+  const { search } = req.query
   try {
     const tags = await Post.aggregate([
       {$unwind: "$tags"},
@@ -190,9 +192,44 @@ export const getTags = async (req, res, next) => {
       {
         $project: {
           _id: 0, // Exclude the "_id" field from the result
-          tags: 1 // Include only the "tags" field in the result
+          tags: {
+            $filter: {
+              input: "$tags",
+              as: "tag",
+              cond: {
+                $regexMatch: {
+                  input: "$$tag",
+                  regex: search,
+                }
+              }
+            }
+          }
         }
-      }
+      },
+      // {
+      //   $project: {
+      //     tags: {
+      //       $cond: {
+      //         if: { $eq: [{ $size: "$tags" }, 0] },
+      //         then: "$$REMOVE", // If no matching tags found, remove the "tags" field
+      //         else: "$tags"
+      //       }
+      //     }
+      //   }
+      // }
+      // {
+      //   $project: {
+      //     _id: 0, // Exclude the "_id" field from the result
+      //     tags: 1 // Include only the "tags" field in the result
+      //   }
+      // },
+      // { 
+      //   $match: {
+      //     tags: {
+      //       $regex: search // Use a case-insensitive regex for matching
+      //     }
+      //   }
+      // }
     ])
     res.status(200).json(tags[0].tags)
 

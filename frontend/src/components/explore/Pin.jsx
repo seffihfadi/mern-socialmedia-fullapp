@@ -1,13 +1,12 @@
-import User from "../userTypes/User"
 import TimeAgo from 'react-timeago'
-import { Swiper, SwiperSlide } from 'swiper/react'
-import { Pagination } from 'swiper/modules'
-import { EffectFade } from 'swiper/modules'
-import { Autoplay } from "swiper/modules"
-import { useNavigate } from "react-router-dom"
+import User from "../userTypes/User"
 import { motion } from 'framer-motion'
-import { PinAnim } from "../../utils/animation/exploreAnimation"
+import { useNavigate } from "react-router-dom"
+import { Swiper, SwiperSlide } from 'swiper/react'
 import { useRef, useState, useEffect } from "react"
+import { useAuth } from '../../context/AuthProvider'
+import { PinAnim } from "../../utils/animation/exploreAnimation"
+import { Pagination, Autoplay, EffectFade } from 'swiper/modules'
 
 import 'swiper/css'
 import 'swiper/css/pagination'
@@ -17,9 +16,11 @@ import 'swiper/css/effect-fade'
 
 const Pin = ({pin}) => {
 
+  const {_id: sessionID} = useAuth()
   const navigate = useNavigate()
   const swiperRef = useRef()
   const [autoplayInitiallyActive] = useState(false)
+  const toLink = pin.owner._id === sessionID ? `/profile/?post=${pin._id}` : `/?post=${pin._id}`
 
   useEffect(() => {
     if (swiperRef.current && !autoplayInitiallyActive) {
@@ -41,7 +42,12 @@ const Pin = ({pin}) => {
 
   return (
     <motion.div variants={PinAnim} className='pin'>
-      <div  onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} onClick={() => navigate(`/profile/?post=${pin._id}`)} className="hov">
+      <div 
+        onMouseEnter={handleMouseEnter} 
+        onMouseLeave={handleMouseLeave} 
+        onClick={() => navigate(toLink)} 
+        className="hov"
+      >
         <div className="savedown">
           <button onClick={(e) => {e.stopPropagation()}} ><i className="uil uil-heart"></i></button>
           <a 

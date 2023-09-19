@@ -1,36 +1,36 @@
-import Comment from "./Comment"
-import { useState, useEffect } from "react"
 import axios from "axios"
 import Loader from '../Loader'
-import { useAlert } from "../../context/AlertProvider"
+import Comment from "./Comment"
+import { useState, useEffect } from "react"
 import { usePost } from "../../context/PostProvider"
 import { useAuth } from "../../context/AuthProvider"
+import { useAlert } from "../../context/AlertProvider"
+import { useNewComment } from "../../context/PostProvider"
 
 const Comments = () => {
-  const [comments, setComments] = useState([])
+  const user = useAuth()
   const [post] = usePost()
   const [setAlert] = useAlert()
-  const user = useAuth()
+  const [comments, setComments] = useState([])
+  const [newComment] = useNewComment()
 
   useEffect(() => {
     (async function() {
       try {
-        // const comm = {
-        //   _id: "6503539b19125109f7320139",
-        //   owner: user,
-        //   replays: 0,
-        //   body: "@imedfadi hhhhhh",
-        //   createdAt: new Date(Date.now())
-        // }
         const response = await axios.get(`http://127.0.0.1:4000/api/comments/${post._id}`, {withCredentials: true})
-        //console.log('comments', response)
         setComments(response.data)
-        //setComments([...comments, comm])
+        // console.log('comments', response.data)
       } catch (error) {
         setAlert({type: 'error', text: 'can not fetch comments'})
       }
     })()
   }, [])
+
+  useEffect(() => {
+    if (!newComment || newComment?.isReplay) return
+    setComments(prev => ([newComment, ...prev]))
+  }, [newComment])
+
   return (
     <div className="comments">
       <h1 className="head_text">comments</h1>

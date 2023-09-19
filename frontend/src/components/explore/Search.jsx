@@ -1,7 +1,7 @@
+import axios from "axios"
 import { useState, useEffect } from "react"
 import { useSearchParams } from "react-router-dom"
 import useDebounce from "../../utils/hooks/useDebounce"
-import axios from "axios"
 
 const Search = () => {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -18,28 +18,36 @@ const Search = () => {
   useEffect(() => {
     (async function() {
       try {
-        const response = await axios.get(`http://127.0.0.1:4000/api/post/tags`, {withCredentials: true})
+        const response = await axios.get(`http://127.0.0.1:4000/api/post/tags?search=${debouncedSearch}`, {withCredentials: true})
         setTags(response.data)
-        console.log('response tages', response)
+        //console.log('response tages', response)
       } catch (error) {
         console.log('error', error)
       }
     })()
-  }, [])
+  }, [debouncedSearch])
 
   return (
     <div className="search col-span-12 my-10 lg:my-0 lg:col-span-7">
       <input 
+        type="text" 
         name='search'
         value={search}
-        onChange={(e) => {setSearch(e.target.value)}} 
         className='glass' 
         placeholder='Search' 
-        type="text" 
+        onChange={(e) => setSearch(e.target.value)} 
       />
       <div className="tags">
-        <div onClick={(e) => {setSearch('')}} className="tag">#All</div>
-        {tags?.map((tag, i) => <div key={i} onClick={(e) => {setSearch(tag)}} className="tag">#{tag}</div>)}
+        <div onClick={() => setSearch('')} className="tag">#All</div>
+        {tags.length > 0 && tags.map((tag, i) => 
+          <div 
+            key={i} 
+            onClick={() => setSearch(tag)} 
+            className="tag"
+          >
+            #{tag}
+          </div>
+        )}
       </div>
     </div>
   )

@@ -4,6 +4,9 @@ import axios from "axios"
 import Loader from "../components/Loader"
 import { useAuth } from "./AuthProvider"
 
+import io from 'socket.io-client'
+const socket = io.connect('http://localhost:4000', {transports: ['websocket']})
+
 const RoomContext = createContext()
 
 export const useRoom = () => {
@@ -14,38 +17,45 @@ export const useNewMsg = () => {
   return useContext(RoomContext)[1]
 }
 
-const RoomProvider = ({children}) => {
+export const useJoinRoom = () => {
+  return useContext(RoomContext)[2]
+}
+export const useChatSocket = () => {
+  return useContext(RoomContext)[3]
+}
 
+const RoomProvider = ({children}) => {
+  
   const user = useAuth()
   const { roomID } = useParams()
   const [room, setRoom] = useState(null)
-  const [newMessage, setNewMessage] = useState({
-    content: '',
-    createdAt: new Date(Date.now()),
-    _id: Math.random().toString(),
-    sender: user, 
-    room: ''
-  })
-  //const [setAlert] = useAlert()
-
+  const [joinRoom, setJoinRoom] = useState(false)
+  const [newMessage, setNewMessage] = useState({})
+  
+  
   useEffect(() => {
     (async function() {
       try {
         const response = await axios.get(`http://127.0.0.1:4000/api/chat/${roomID}`, {withCredentials: true})
         setRoom(response.data)
-        console.log('response room prov', response)
       } catch (error) {
         console.log('RoomError', error)
-        //setAlert({type: 'error', text: error.response.data.message})
       }
     })()
   }, [roomID])
-
-
+  
+  
+  
   if(room == null) return <Loader msg='wating for room' />
   return (
-    <RoomContext.Provider value={[room, [newMessage, setNewMessage]]}>
-      {children}
+    <RoomContext.Provider 
+      value={[
+        room, 
+        [newMessage, setNewMessage],
+        [joinRoom, setJoinRoom], 
+        socket
+      ]}>
+        {children}
     </RoomContext.Provider>
   )
 }

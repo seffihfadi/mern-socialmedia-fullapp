@@ -5,13 +5,14 @@ import { useAlert } from "../../context/AlertProvider"
 import Empty from "../Empty"
 import Loader from "../Loader"
 import ChatRoom from "./ChatRoom"
-import { useRoom } from "../../context/RoomProvider"
+import { useRoom, useNewMsg } from "../../context/RoomProvider"
 
 const Conversations = () => {
   const activeRoom = useRoom()
   const session = useAuth()
   const [setAlert] = useAlert()
   const [rooms, setRooms] = useState(null)
+  const [newMessage] = useNewMsg()
   const [creatingRoom, setCreatingRoom] = useState(false)
 
   useEffect(() => {
@@ -25,7 +26,7 @@ const Conversations = () => {
         setAlert({type: 'error', text: error.response.data.message})
       }
     })()
-  }, [creatingRoom])
+  }, [creatingRoom, newMessage._id])
 
   const handleCreateRoom = async (connectionID, chatName) => {
     setCreatingRoom(true)

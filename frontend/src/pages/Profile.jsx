@@ -16,7 +16,7 @@ const Profile = () => {
     (async function() {
       try {
         const response = await axios.get(`http://127.0.0.1:4000/api/user/${userID || user._id}`, {withCredentials: true})
-        console.log('response USER', response)
+        //console.log('response USER', response)
         setUserProfile(response.data)
       } catch (error) {
         setAlert({type: 'error', text: error.response.data.message})

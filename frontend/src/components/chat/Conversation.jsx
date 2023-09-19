@@ -1,43 +1,67 @@
-import { useAuth } from "../../context/AuthProvider"
+import axios from "axios"
 import ChatRoom from "./ChatRoom"
 import Messages from './Messages'
-import Loader from '../Loader'
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { useAuth } from "../../context/AuthProvider"
 import { useAlert } from "../../context/AlertProvider"
-import axios from "axios"
-import { useRoom, useNewMsg } from "../../context/RoomProvider"
+
+import { 
+  useRoom, 
+  useNewMsg, 
+  useJoinRoom, 
+  useChatSocket 
+} from "../../context/RoomProvider"
 
 const Conversation = () => {
+
   const room = useRoom()
-  const [newMessage, setNewMessage] = useNewMsg()
   const user = useAuth()
   const [setAlert] = useAlert()
+  const socket = useChatSocket()
+  const [joinRoom] = useJoinRoom()
   const [msg, setMsg] = useState('')
-
+  const [newMessage, setNewMessage] = useNewMsg()
+  
   const handleSend = async (e) => {
     e.preventDefault()
-    setNewMessage(prev => ({...prev, content: msg, room: room._id}))
+    if (!msg) return
+
+    const newMessageDoc = {
+      _id: Date.now(),
+      content: msg,
+      room: room._id,
+      createdAt: new Date(Date.now()),
+      sender: {fullname: user.fullname, image: user.image, _id: user._id}, 
+    }
+    setNewMessage(newMessageDoc)
     setMsg('')
+    socket.emit('new-message', newMessageDoc)
     try {
       const response = await axios.post('http://127.0.0.1:4000/api/messages/insert-message', 
         {message: msg, roomID: room._id}, {withCredentials: true}
       )
-      console.log('response', response)
     } catch (error) {
       setAlert({type: 'error', text: error.response.data.message})
     }
-
   }
 
+  useEffect(() => {
+    socket.on('new-message-back', (msgBack) => {
+      if (msgBack.sender._id !== user._id) {
+        console.log('new-message-back', msgBack)
+        setNewMessage(msgBack)
+      }
+    })
+  }, [])
+  
   return (
     <div className="center ldr_data">
       <div className="flex justify-between py-2 px-4">
-        <ChatRoom key={room._id} room={room} />
+        <ChatRoom key={room._id} room={room} one={true} isActive={joinRoom} />
         <div className="flex">
           <button><i className="uil uil-sliders-v"></i></button>
         </div>
       </div>
-
       <Messages />
       <div className="mt-auto py-2 px-4">
         <form onSubmit={handleSend} className="flex gap-3 items-center" noValidate>

@@ -21,7 +21,7 @@ const AuthProvider = ({children}) => {
         //console.log('response', response)
         if (!!response.data.user) {
           setUser(response.data.user)
-          console.log('response.data.user', response.data.user)
+          //console.log('response.data.user', response.data.user)
         }
       } catch (error) {
         //setRedirect(true)

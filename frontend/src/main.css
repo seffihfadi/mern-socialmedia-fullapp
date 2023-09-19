@@ -499,6 +499,9 @@ button:disabled{
 .comments .comment{
   @apply flex gap-4 items-start my-3
 }
+.comments .comment.deleted{
+  @apply hidden
+}
 .comments .replays{
   @apply ml-14 border-l-2 border-[#353535] pl-3 py-2
 }

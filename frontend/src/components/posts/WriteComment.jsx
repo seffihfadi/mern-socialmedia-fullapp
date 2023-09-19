@@ -1,38 +1,49 @@
-import { useEffect, useState, useRef } from "react"
-import { useAuth } from "../../context/AuthProvider"
 import axios from "axios"
+import { useEffect, useState, useRef } from "react"
+
 import { tagName } from "../../utils/code"
+import { useAuth } from "../../context/AuthProvider"
 import { useAlert } from "../../context/AlertProvider"
+import { useNewComment } from "../../context/PostProvider"
 
 const WriteComment = ({ postID, commentID, owner }) => {
-  const {image} = useAuth()
   const inputRef = useRef()
-  const isWriteComment = commentID === ''
-  const [comment, setComment] = useState('')
   const [setAlert] = useAlert()
-
+  const {image, fullname, _id} = useAuth()
+  const [comment, setComment] = useState('')
+  const [newComment, setNewComment] = useNewComment()
+  
+  const isWriteComment = commentID === ''
+  
   useEffect(() => {
     if (!owner) return
     setComment(tagName(owner.fullname) + ' ')
     inputRef.current.focus()
-    //owner = {}
   }, [owner])
-
+  
   const handleCreateComment = async (e) => {
     e.preventDefault()
-    //if (!comment) return
+    const newCommentDoc = {
+      _id: Date.now(),
+      owner: {image, fullname, _id},
+      replays: 0,
+      body: comment,
+      createdAt: new Date(Date.now()),
+      isReplay: !isWriteComment,
+      parentID: isWriteComment ? postID : commentID
+    }
+    
     setComment('')
+    setNewComment(newCommentDoc)
     const replayFor = owner?._id
 
     try {
       const response = await axios.post('http://127.0.0.1:4000/api/comments/create', 
         {comment, postID, commentID, replayFor}, {withCredentials: true}
       )
-      console.log('response', response)
       setAlert({type: 'success', text: response.data.message})
 
     } catch (error) {
-      console.log('error', error)
       setAlert({type: 'error', text: error.response.data.message})
     }
   }
@@ -51,7 +62,11 @@ const WriteComment = ({ postID, commentID, owner }) => {
             placeholder={`write a ${isWriteComment ? 'comment' : 'replay'}`}
             required
           />
-          <img className="left-1 top-1 absolute w-8 h-8 rounded-full object-cover" src={image} alt='profile img' />
+          <img 
+            className="left-1 top-1 absolute w-8 h-8 rounded-full object-cover" 
+            src={image} 
+            alt='profile img' 
+          />
         </div>
         {comment.length > 0 &&
           <div className="flex">

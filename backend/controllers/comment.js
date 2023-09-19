@@ -8,13 +8,13 @@ export const createComment = async (req, res, next) => {
   try {
     const isReplay = commentID !== ''
     if (!postID.match(/^[0-9a-fA-F]{24}$/) || isReplay && !commentID.match(/^[0-9a-fA-F]{24}$/)) {
-      req.status(400)
+      res.status(400)
       throw new Error('bad data provided !')
     }
 
     const post = await Post.findById(postID)
     if (!post) {
-      req.status(400)
+      res.status(400)
       throw new Error('post not found')
     }
     
@@ -28,7 +28,7 @@ export const createComment = async (req, res, next) => {
       commentDoc.isReplay = true
       const parent = await Comment.findById(commentID)
       if (!parent) {
-        req.status(400)
+        res.status(400)
         throw new Error('parent comment not found')
       }
       parent.replays += 1
@@ -36,7 +36,7 @@ export const createComment = async (req, res, next) => {
     }
     const newComment = await Comment.create(commentDoc)
     if (!newComment) {
-      req.status(400)
+      res.status(400)
       throw new Error('failed to create comment')
     }
     
@@ -102,15 +102,23 @@ export const deleteComment = async (req, res, next) => {
   const {commentID} = req.params
   const {_id: sessionID} = req.user
   try {
-    
+    if (!commentID.match(/^[0-9a-fA-F]{24}$/)) {
+      res.status(400)
+      throw new Error('We cannot delete this comment at the moment; please try again later as it was just created.')
+    }
     const comment = await Comment.findOneAndDelete({_id: commentID, owner: sessionID})
-    //console.log('comment', comment)
     if (!comment) {
       res.status(400)
       throw new Error('comment not found !')
     }
-    await Comment.findByIdAndUpdate(comment.parent, {$inc: {replays: -1}})
-    await Post.findByIdAndUpdate(comment.postID, {$inc: {comments: -1}})
+
+    const deleteResult = await Comment.deleteMany({ isReplay: true, parent: comment._id })
+    const deletedCount = deleteResult.deletedCount
+    console.log('deletedCount', deletedCount)
+    // Decrement the comments count in the associated Post
+    await Post.findByIdAndUpdate(comment.postID , { $inc: { comments: -deletedCount-1 } })
+    await Comment.findByIdAndUpdate(comment.parent, { $inc: {replays: -deletedCount-1} })
+
     res.status(200).json({message: `your ${comment.isReplay ? 'replay' : 'comment'} deleted successfuly.`})
     
   } catch (error) {

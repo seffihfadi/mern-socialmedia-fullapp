@@ -7,14 +7,15 @@ const Chat = ({
   roomID,
   lastMsg='conversation is empty', 
   type='sm',
-  isActive = false
+  isActive = false,
+  one= false
 }) => {
   return (
     <>
       {type == 'lg' ?
       <Link to={`/profile/${user._id}`}>
         <div className="flex justify-center flex-col items-center">
-          <div className="w-32 h-32">
+          <div className={`w-32 h-32`}>
             <img className="object-cover w-full h-full rounded-full"  src={user.image} alt={user.fullname} />
           </div>
           <div className="text-center mt-3">
@@ -24,9 +25,9 @@ const Chat = ({
         </div>
       </Link>
       :
-      <div className={`flex justify-between items-center my-5 max-w-sm connection ${isActive && 'active'}`}>
+      <div className={`flex justify-between items-center my-5 max-w-sm connection ${isActive && !one && 'active'}`}>
         <Link className="flex items-center gap-3" to={`/chat/${roomID}`}>
-          <div className="img flex-shrink-0">
+          <div className={`img flex-shrink-0 ${isActive && one && 'animate-bounce'}`}>
             <img className="w-11 h-11 rounded-full object-cover" src={user.image} alt={user.fullname} />
           </div>
           <div className="flex flex-col">

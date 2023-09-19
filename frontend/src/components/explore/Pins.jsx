@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react'
+import Pin from './Pin'
 import axios from 'axios'
 import Empty from '../Empty'
 import Loader from '../Loader'
-import Pin from './Pin'
+import { motion } from 'framer-motion'
+import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { PinsAnim } from '../../utils/animation/exploreAnimation'
-import { motion } from 'framer-motion'
 
 
 const Pins = () => {
