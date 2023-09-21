@@ -10,27 +10,25 @@ export const sendConnectionRequest = async (req, res, next) => {
       res.status(400)
       throw new Error("an error occurred, please try again later.")
     }
-
-    const isSended = await ConnectionRequest.findOneAndDelete({recipient: receiverID})
-    if (!!isSended) {
-      res.status(200)
-      throw new Error("follow request deleted successfully")
-    }
-
-    const receiverAccount = await User.findById(receiverID).select('-password')
+    const receiverAccount = await User.findById(receiverID).select('fullname')
     if (!receiverAccount) {
       res.status(404)
       throw new Error("user not found !")
     }
 
-    const newConnectionRequest = await ConnectionRequest.create({requester: sender._id, recipient: receiverID})
-
-    if (!newConnectionRequest) {
-      res.status(500)
-      throw new Error("request not sent, please try again later.")
+    const isSended = await ConnectionRequest.findOneAndDelete({recipient: receiverID, requester: sender._id})
+    if (!!isSended) {
+      res.status(200).json({message: 'connection request for "'+ receiverAccount.fullname +'" deleted successfully'})
+    } else {
+      
+      const newConnectionRequest = await ConnectionRequest.create({requester: sender._id, recipient: receiverID})
+  
+      if (!newConnectionRequest) {
+        res.status(500)
+        throw new Error("request not sent, please try again later.")
+      }
+      res.status(201).json({ message: 'connection request for "'+ receiverAccount.fullname +'" sent successfully' })
     }
-    res.status(201).json({ message: 'follow request sent successfully' })
-
   } catch (error) {
     next(error)
   }

@@ -71,7 +71,7 @@ const Signup = () => {
             </div>
             <div className="group">
               {selectedImages.length > 0 ? (
-                <div className="user_img relative mx-auto">
+                <div onClick={() => setSelectedImages([])} className="user_img relative mx-auto">
                   <img className="object-cover w-64 aspect-square rounded-full" src={`${URL.createObjectURL(selectedImages[0])}`} alt="" />
                 </div>
               ) : (

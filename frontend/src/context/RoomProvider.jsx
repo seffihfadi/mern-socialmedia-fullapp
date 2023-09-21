@@ -7,6 +7,7 @@ import { useAuth } from "./AuthProvider"
 import io from 'socket.io-client'
 const socket = io.connect('http://localhost:4000', {transports: ['websocket']})
 
+
 const RoomContext = createContext()
 
 export const useRoom = () => {
@@ -32,6 +33,7 @@ const RoomProvider = ({children}) => {
   const [joinRoom, setJoinRoom] = useState(false)
   const [newMessage, setNewMessage] = useState({})
   
+  socket.emit('user-connected', user._id)
   
   useEffect(() => {
     (async function() {

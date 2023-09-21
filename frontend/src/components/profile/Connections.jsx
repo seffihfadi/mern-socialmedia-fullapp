@@ -1,6 +1,7 @@
 import Connection from "./Connection"
 import Empty from "../Empty"
 import { useAuth } from "../../context/AuthProvider"
+import NotFriend from "../userTypes/NotFriend"
 
 const Connections = ({ user }) => {
   const connections = user.connections
@@ -20,7 +21,9 @@ const Connections = ({ user }) => {
   } 
   return (
     <div className="connections overflow-y-auto">
-      {connections.map((connection, i) => <Connection key={i} user={connection} type='notfriend' />)}
+      {connections.map((connection, i) => 
+        <NotFriend key={i} user={{...connection, relationTome: 'connection'}} />
+      )}
     </div>
   )
 }

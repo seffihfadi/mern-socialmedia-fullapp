@@ -1,32 +1,33 @@
-import Connection from '../../components/profile/Connection'
-import { useState, useEffect } from 'react'
-import useDebounce from '../../utils/hooks/useDebounce'
 import axios from 'axios'
-import { useAlert } from '../../context/AlertProvider'
 import Empty from '../Empty'
+import NotFriend from '../userTypes/NotFriend'
+import useDebounce from '../../utils/hooks/useDebounce'
+
+import { useState, useEffect, useRef } from 'react'
+import { useAlert } from '../../context/AlertProvider'
 
 const Search = () => {
-  const [search, setSearch] = useState('')
-  const [data, setData] = useState([])
-  const debouncedSearch = useDebounce(search, 500)
+  const inputRef = useRef()
   const [setAlert] = useAlert()
+  const [data, setData] = useState([])
+  const [search, setSearch] = useState('')
+  const debouncedSearch = useDebounce(search, 500)
 
   useEffect(() => {
-    /* search.length > 0 &&*/ (async function () {
+    (async function () {
+      inputRef.current.focus()
       try {
         const responce = await axios.get(`http://127.0.0.1:4000/api/user/getusers?search=${debouncedSearch}`,
           {withCredentials: true}
         )
-        //console.log('responce', responce)
+        console.log('first', responce.data)
         if (responce.status === 200) {
           setData(responce.data)
         }
-        
       } catch (error) {
         setAlert({type: 'error', text: error.response.data.message})
       }
     })()
-
   }, [debouncedSearch])
 
   return (
@@ -34,26 +35,34 @@ const Search = () => {
       <h1 className="head_text text-xl">Search</h1>
       <div className="mb-5 relative">
         <input 
-          name='search' 
-          value={search}
-          onChange={(e) => {setSearch(e.target.value)}} 
-          className='glass w-full' 
-          placeholder='Search' 
           type="text" 
-          onClick={(e) => {e.stopPropagation()}}
+          name='search' 
+          ref={inputRef}
+          value={search}
+          placeholder='Search' 
+          className='glass w-full' 
+          onClick={(e) => e.stopPropagation()}
+          onChange={(e) => setSearch(e.target.value)} 
         />
         {!!search &&
-          <button onClick={() => {setSearch('')}} className='absolute right-2 top-[0.25rem]'>
+          <button 
+            onClick={(e) => {
+              e.stopPropagation()
+              setSearch('')
+            }} 
+            className='absolute right-2 top-[0.25rem]'
+          >
             <i className="uil uil-times"></i>
           </button>
         }
       </div>
-      {data.length > 0 ?
-      <div className="connections overflow-y-auto">
-        {data.map((user) => <Connection user={user} key={user._id} type='notfriend' />)}
-      </div>
+      {data.length > 0 
+      ?
+        <div className="connections overflow-y-auto">
+          {data.map((user) => <NotFriend user={user} key={user._id} />)}
+        </div>
       :
-      <Empty type='lg' text='Discover new, fascinating individuals and forge meaningful connections with them.' />
+        <Empty type='lg' text='Discover new, fascinating individuals and forge meaningful connections with them.' />
       }
       
     </div>

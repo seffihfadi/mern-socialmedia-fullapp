@@ -1,21 +1,20 @@
 import Empty from "../Empty"
 import Conversation from "../../components/chat/Conversation"
 import ConversationOptions from "../../components/chat/ConversationOptions"
-import { useRoom, useJoinRoom, useChatSocket } from "../../context/RoomProvider"
-import { useAuth } from "../../context/AuthProvider"
-
 
 import { useEffect } from "react"
+import { useAuth } from "../../context/AuthProvider"
+import { useRoom, useJoinRoom, useChatSocket } from "../../context/RoomProvider"
 
 const Room = () => {
   const room = useRoom()
+  const {_id} = useAuth()
   const socket = useChatSocket()
-  const {fullname, _id} = useAuth()
   const [joinRoom, setJoinRoom] = useJoinRoom()
+  
   useEffect(() => {
-    socket.emit('joinChat', {room: room, user:{fullname, _id}})
+    socket.emit('joinChat', {room: room, user:{_id}})
     socket.on('leaveChat', () => {
-      // console.log(data.user.fullname + ' leave all rooms ')
       setJoinRoom(false)
     })
     socket.on('joined', () => {

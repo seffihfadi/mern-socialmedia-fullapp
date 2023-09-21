@@ -34,7 +34,15 @@ const userSchema = new Schema({
   connections: [{
     type: Types.ObjectId,
     ref: 'User'
-  }]
+  }],
+  profileViews: [{
+    type: Types.ObjectId,
+    ref: 'User'
+  }],
+  isActive: {
+    type: Boolean,
+    default: false
+  } 
 }, {
   timestamps: true
 })

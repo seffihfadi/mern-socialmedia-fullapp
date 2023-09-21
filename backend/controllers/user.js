@@ -1,10 +1,35 @@
 import User from "../models/User.js"
+import ConnectionRequest from "../models/ConnectionRequest.js"
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
 import cloudinary from "../utils/cloudinary.js"
+import mongoose from "mongoose"
 
 const generateToken = (userID) => {
   return jwt.sign({ userID }, process.env.JWT_SECRET, {expiresIn: '1d'})
+}
+
+const addRelationTome = async (sessionID, users) => {
+  const connectionRequests = await ConnectionRequest.find({
+    requester: sessionID,
+    status: 'pending',
+  })
+
+  const NotFriend = users.map(user => {
+    const isConnection = user.connections.includes(sessionID)
+    const isRequestSender = connectionRequests.some(
+      (request) => request.recipient.toString() === user._id.toString()
+    )
+
+     // Check if user is a Mongoose document before using toObject()
+     const userObject = user instanceof mongoose.Document ? user.toObject() : user;
+
+    return {
+      ...userObject,
+      relationTome: !!isConnection ? 'connection' : isRequestSender ? 'request' : 'unknown',
+    }
+  })
+  return NotFriend
 }
 
 export const signupUser = async (req, res, next) => {
@@ -21,6 +46,10 @@ export const signupUser = async (req, res, next) => {
     let dataURI = "data:" + image.mimetype + ";base64," + imageB64;
     const {secure_url: url} = await cloudinary.uploader.upload(dataURI, {
       folder: "Zoquix",
+      transformation: [
+        { width: 300, height: 300, crop: 'fill', quality: 50 },
+        {fetch_format: "auto"}
+      ]
     })
 
     const user = await User.findOne({email})
@@ -124,25 +153,30 @@ export const getUser = async (req, res, next) => {
 
 export const getAllUsers = async (req, res, next) => {
   const search = req.query.search
+  const {_id: sessionID} = req.user
   try {
     if (!search) {
       res.status(200).json([])
-    }
-    const usersSearchQuery 
-    = search ? 
-      { $or: [
-        { email: { $regex: search }}, 
-        { fullname: { $regex: search }}
-      ]} 
+    }else {
+
+      const usersSearchQuery = search 
+      ? 
+        { $or: [
+          { email: { $regex: search }}, 
+          { fullname: { $regex: search }}
+        ]} 
       : 
-      {}
-    const users = await User.find(usersSearchQuery).select('-password')
-    res.status(200).json(users)
+        {}
+  
+      const users = await User.find(usersSearchQuery).select(['image', 'fullname', 'connections', 'email', 'isActive'])
+      const NotFriend = await addRelationTome(sessionID, users)
+      res.status(200).json(NotFriend)
+    }
+
   } catch (error) {
     next(error)
   }
 }
-
 
 export const getUserByID = async (req, res, next) => {
   const userID = req.params.userID
@@ -152,12 +186,19 @@ export const getUserByID = async (req, res, next) => {
     if (userID == sessionUserID || !userID.match(/^[0-9a-fA-F]{24}$/)) {
       userRedID = sessionUserID
     } else {
-
       const isUserFound = await User.findById(userID)
       userRedID = !isUserFound ? sessionUserID : userID
     }
 
-    
+    // if not my account increment profile views
+    if (userRedID !== sessionUserID){
+      const userProfile = await User.findById(userRedID)
+      if (!userProfile.profileViews.includes(sessionUserID)) {
+        userProfile.profileViews.push(sessionUserID)
+        await userProfile.save()
+      }
+    }
+
     const userProfile = await User.findById(userRedID).select('-password').populate('connections')
     res.status(200).json(userProfile)
     
@@ -165,7 +206,6 @@ export const getUserByID = async (req, res, next) => {
     next(error)
   }
 }
-
 
 export const updateProfile = async (req, res, next) => {
   const {fullname, slogan, bio, image} = req.body
@@ -206,7 +246,6 @@ export const updateProfile = async (req, res, next) => {
   }
 }
 
-
 export const changePassword = async (req, res, next) => {
   const {oldpass, newpass} = req.body
   const user = req.user
@@ -237,3 +276,48 @@ export const changePassword = async (req, res, next) => {
     next(error)
   }
 }
+
+export const getSeggestions = async (req, res, next) => {
+  const user = req.user
+  try {
+    let suggestions = []
+
+    if (user.connections.length > 0) {
+      const connectedUserIds = user.connections.map((connection) => connection._id)
+      suggestions = await User.find({
+        _id: { $nin: connectedUserIds.concat([user._id]) },
+        connections: { $in: connectedUserIds },
+      }).limit(6)
+    } else {
+      suggestions = await User.aggregate([
+        { $match: { _id: { $ne: user._id } } },
+        { $sample: { size: 6 } },
+      ])
+    }
+
+    const NotFriend = await addRelationTome(user._id, suggestions)
+    res.status(200).json(NotFriend)
+
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const getProfileViews = async (req, res, next) => {
+  const user = req.user
+  try {
+    const profile = await User.findById(user._id)
+    .select('profileViews')
+    .populate(
+      'profileViews', 
+      ['image', 'fullname', 'email', 'connections']
+    )
+
+    const NotFriend = await addRelationTome(user._id, profile.profileViews)
+    res.status(200).json(NotFriend)
+  } catch (error) {
+    next(error)
+  }
+}
+
+

@@ -79,7 +79,11 @@ const Conversation = () => {
               placeholder="Aa" 
               required
             />
-            <img className="left-1 top-1 absolute w-8 h-8 rounded-full object-cover" src={user.image} alt={user.name} />
+            <img 
+              alt={user.name} 
+              src={user.image} 
+              className="left-1 top-1 absolute w-8 h-8 rounded-full object-cover" 
+            />
           </div>
           {msg.length > 0 &&
           <div className="flex">

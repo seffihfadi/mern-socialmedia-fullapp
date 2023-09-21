@@ -1,18 +1,21 @@
 import UserInfo from "./UserInfo"
 import Connections from "./Connections"
-import { Link, useOutletContext } from "react-router-dom"
-import { tagName } from "../../utils/code"
-import { useState } from "react"
+import Suggestions from '../Suggestions'
+import ProfileViews from "./ProfileViews"
 import Feed from '../../components/home/Feed'
+
+import { useState } from "react"
+import { tagName } from "../../utils/code"
 import { useAuth } from "../../context/AuthProvider"
+import { Link, useOutletContext } from "react-router-dom"
 
 const ProfilePage = () => {
-  const userProfile = useOutletContext()
+
   const {_id: sessionID} = useAuth()
+  const userProfile = useOutletContext()
+  const [postsCount, setPostsCount] = useState(0)
   const isMyProfile = userProfile._id === sessionID
 
-
-  const [postsCount, setPostsCount] = useState(0)
   return (
     <>
       <div className="col-span-12 xl:col-span-9">
@@ -31,7 +34,7 @@ const ProfilePage = () => {
             }
           </div>
           <div className="box bg-glass">
-            <h1>52</h1>
+            <h1>{userProfile.profileViews.length}</h1>
             <p>profile<br /> views</p>
           </div>
           <div className="box bg-glass">
@@ -54,8 +57,8 @@ const ProfilePage = () => {
           </div>
           <div className="hidden md:block md:col-span-3 lg:col-span-4">
             <div className="sticky top-4">
-              <h1 className="head_text">suggestions</h1>
-              <Connections user={userProfile} />
+              <h1 className="head_text">{isMyProfile && userProfile.profileViews.length > 0 ? 'who have visited your profile' : 'suggestions'}</h1>
+              {isMyProfile && userProfile.profileViews.length > 0 ? <ProfileViews /> : <Suggestions />}
             </div>
           </div>
         </div>

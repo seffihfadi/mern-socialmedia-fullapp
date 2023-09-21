@@ -19,9 +19,6 @@ const Connection = ({ user={fullname: 'ahmed elsayed', image: '/bg2.jpg', email:
       case 'notfriend':
         return <NotFriend user={user} />
         break
-      // case 'notify':
-      //   return <Notify user={user} msg={msg} />
-      //   break
       default:
         return <User user={user} />
         break
@@ -29,9 +26,9 @@ const Connection = ({ user={fullname: 'ahmed elsayed', image: '/bg2.jpg', email:
   }
 
   return (
-    <div className="flex justify-between items-center my-5 max-w-sm connection">
-      { generateUser(type) }
-    </div>
+    // <div className="flex justify-between items-center my-5 max-w-sm connection">
+       generateUser(type) 
+    // </div>
   )
 }
 

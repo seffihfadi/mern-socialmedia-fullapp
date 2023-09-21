@@ -47,3 +47,21 @@ const App = () => {
 }
 
 export default App
+
+
+// const Home = lazy(() => import('./pages/Home'))
+// const Signin = lazy(() => import('./pages/Signin')) 
+// const Signup = lazy(() => import('./pages/Signup')) 
+// const Chat = lazy(() => import('./pages/Chat')) 
+// const Explore = lazy(() => import('./pages/Explore')) 
+// const Profile = lazy(() => import('./pages/Profile')) 
+// const Post = lazy(() => import('./pages/Post')) 
+
+// const RequireAuth = lazy(() => import('./components/RequireAuth')) 
+// const AlertModel = lazy(() => import('./components/AlertModel')) 
+// const AuthProvider = lazy(() => import('./context/AuthProvider')) 
+
+// const AddPost = lazy(() => import('./components/posts/AddPost')) 
+// const UpdatePost = lazy(() => import('./components/posts/UpdatePost')) 
+// const Edit = lazy(() => import('./components/profile/Edit')) 
+// const ProfilePage = lazy(() => import('./components/profile/ProfilePage')) 

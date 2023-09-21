@@ -1,10 +1,9 @@
 import Room from '../models/Room.js'
-import Message from '../models/Message.js'
 
 export const getUserRooms = async (req, res, next) => {
   const {_id: userID} = req.user
   try {
-    const rooms = await Room.find({users: {$in: userID}}).populate('users', ['image', 'fullname']).populate('latestMsg').sort('-updatedAt')
+    const rooms = await Room.find({users: {$in: userID}}).populate('users', ['image', 'fullname', 'isActive']).populate('latestMsg').sort('-updatedAt')
     res.json(rooms)
   } catch (error) {
     next(error)
@@ -52,7 +51,8 @@ export const getRoomByID = async (req, res, next) => {
       roomRedID = !isRoomFound ? lastRoomID : roomID
     }
     
-    const room = await Room.findById(roomRedID).populate('users', ['image', 'fullname']).populate('latestMsg')
+    const room = await Room.findById(roomRedID).populate('users', ['image', 'fullname', 'isActive']).populate('latestMsg')
+    console.log('room', room)
     res.status(200).json(room)
     
   } catch (error) {

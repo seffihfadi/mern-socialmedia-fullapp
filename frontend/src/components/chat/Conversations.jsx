@@ -1,18 +1,19 @@
-import { useState, useEffect } from "react"
-import { useAuth } from "../../context/AuthProvider"
 import axios from "axios"
-import { useAlert } from "../../context/AlertProvider"
 import Empty from "../Empty"
 import Loader from "../Loader"
 import ChatRoom from "./ChatRoom"
+import { useState, useEffect } from "react"
+import { useAlert } from "../../context/AlertProvider"
+import { useAuth } from "../../context/AuthProvider"
 import { useRoom, useNewMsg } from "../../context/RoomProvider"
 
 const Conversations = () => {
-  const activeRoom = useRoom()
+
   const session = useAuth()
+  const activeRoom = useRoom()
   const [setAlert] = useAlert()
-  const [rooms, setRooms] = useState(null)
   const [newMessage] = useNewMsg()
+  const [rooms, setRooms] = useState(null)
   const [creatingRoom, setCreatingRoom] = useState(false)
 
   useEffect(() => {
@@ -52,14 +53,14 @@ const Conversations = () => {
             <div className="flex rounded-full border-2 border-[#353535] justify-center items-center w-14 h-14">
               <i className="uil uil-plus"></i>
             </div>
-            <h1 className="capitalize text-center">Group</h1>
+            <h1 className="capitalize text-center text-sm">Group</h1>
           </div>
           {session.connections.map((connection) => 
           <div key={connection._id} onClick={() => {handleCreateRoom(connection._id, connection.fullname)}} className="mx-2 cursor-pointer">
             <div className="img w-14 h-14">
-              <img className="w-full  rounded-full h-full object-cover" src={connection.image} alt={connection.fullname} />
+              <img className="w-full rounded-full h-full object-cover" src={connection.image} alt={connection.fullname} />
             </div>
-            <h1 className="capitalize text-center">{connection.fullname.split(" ")[0]}</h1>
+            <h1 className="capitalize text-center text-sm">{connection.fullname.split(" ")[0]}</h1>
           </div>
           )}
         </div>
@@ -69,13 +70,13 @@ const Conversations = () => {
       <h1 className="head_text">contacts</h1>
       <div className="ldr_data">
         {!rooms 
-        ? <Loader sm msg='geting chats' /> 
+        ? <Loader sm msg='getting chats' /> 
         : rooms.length > 0 
         ? rooms.map((room) => (
             <ChatRoom 
+              room={room} 
               key={room._id} 
               isActive={activeRoom._id === room._id} 
-              room={room} 
             />
           )) ///return seggesions not empty
         : <Empty icon="at" type="lg" text="Unlock the potential of your network! Start by forging meaningful connections and reaching out to contacts." />

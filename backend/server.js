@@ -2,6 +2,7 @@ import cors from 'cors'
 import express from "express"
 import mongoose from 'mongoose'
 import * as dotenv from 'dotenv'
+import User from './models/User.js'
 import bodyParser from "body-parser"
 import cookieParser from "cookie-parser"
 import errorHandler from './middlewares/error.js'
@@ -58,9 +59,15 @@ try {
   })
 
   io.on('connection', (socket) => {
+    // console.log(`Socket ${socket.id} connected`)
+    socket.on('user-connected', async (userID) => {
+      socket.userID = userID;
+      console.log(`user ${userID} connected`)
+      await User.findByIdAndUpdate(userID, { isActive: true })
+      // socket.emit('user-status', { userID, active: true });
+    })
     // User Join Chat
     socket.on('joinChat', (data) => {
-
       // Make him out from all old rooms
       socket.userID = data.user._id
       for (const oldRoomID of socket.rooms) {
@@ -82,8 +89,12 @@ try {
       }
     })
     
-    socket.on('disconnect', () => {
-      console.log(`Socket ${socket.id} disconnected`)
+    socket.on('disconnect', async () => {
+      console.log(`Socket ${socket.userID} disconnected`)
+      if (socket.userID) {
+
+        await User.findByIdAndUpdate(socket.userID, { isActive: false })
+      }
     })
   })
   
