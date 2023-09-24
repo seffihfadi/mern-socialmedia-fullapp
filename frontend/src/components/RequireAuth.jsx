@@ -7,7 +7,6 @@ import { Suspense } from "react"
 
 const RequireAuth = () => {
   const user = useAuth()
-  //console.log('user', user)
   return (
     !!user 
     &&

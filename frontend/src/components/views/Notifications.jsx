@@ -1,9 +1,10 @@
-import ConnectionRequests from "../ConnectionRequests"
-import Notify from "../userTypes/Notify"
-import { useState, useEffect } from "react"
 import axios from "axios"
-import { useAlert } from "../../context/AlertProvider"
 import Loader from '../Loader'
+import Notify from "../userTypes/Notify"
+import ConnectionRequests from "../ConnectionRequests"
+
+import { useState, useEffect } from "react"
+import { useAlert } from "../../context/AlertProvider"
 
 
 const Notifications = () => {
@@ -13,10 +14,8 @@ const Notifications = () => {
     (async function() {
       try {
         const response = await axios.get('http://127.0.0.1:4000/api/notifications/', {withCredentials: true})
-        //console.log('response', response.data)
         setNotification(response.data)
       } catch (error) {
-        //console.log('error', error)
         setAlert({type: 'error', text: 'can not fetch notifications'})
       }
     })()
@@ -31,7 +30,6 @@ const Notifications = () => {
         {!notification ? <Loader sm msg='get notifications' /> :
           notification.map((note, i) => <Notify key={i} note={note} />)
         }
-
       </div>
     </div>
   )

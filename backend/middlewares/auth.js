@@ -1,7 +1,6 @@
 import jwt from 'jsonwebtoken'
 import User from '../models/User.js'
 const privat = async (req, res, next) => {
-  //console.log('req.cookies', req.cookie)
   try {
     const token = req.cookies.zoquixToken
     if (!token) {

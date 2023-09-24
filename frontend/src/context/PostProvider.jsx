@@ -16,7 +16,7 @@ export const useNewComment = () => {
 
 const PostProvider = ({children, post}) => {
   const [newComment, setNewComment] = useState(null)
-  const [currentPost, setCurrentPost] = useState(post)
+  const [currentPost, setCurrentPost] = useState({...post, likeCount: post.reactions.length})
   const [writeTo, setWriteTo] = useState({postID: post._id, commentID: '', owner: null})
 
 

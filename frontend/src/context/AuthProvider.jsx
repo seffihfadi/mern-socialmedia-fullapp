@@ -3,10 +3,17 @@ import axios from "axios"
 import { Navigate } from "react-router-dom"
 import { useAlert } from "./AlertProvider"
 
+import io from 'socket.io-client'
+const socket = io.connect('http://localhost:4000', {transports: ['websocket']})
+
 const AuthContext = createContext()
 
 export const useAuth = () => {
-  return useContext(AuthContext)
+  return useContext(AuthContext)[0]
+}
+
+export const useSocket = () => {
+  return useContext(AuthContext)[1]
 }
 
 const AuthProvider = ({children}) => {
@@ -18,10 +25,9 @@ const AuthProvider = ({children}) => {
     const getUser = async () => {
       try {
         const response = await axios.get('http://127.0.0.1:4000/api/user/getuser', { withCredentials: true })
-        //console.log('response', response)
         if (!!response.data.user) {
           setUser(response.data.user)
-          //console.log('response.data.user', response.data.user)
+          socket.emit('user-connected', response.data.user._id)
         }
       } catch (error) {
         //setRedirect(true)
@@ -30,11 +36,15 @@ const AuthProvider = ({children}) => {
       }
     }
     getUser()
+
+    return () => {
+      socket.disconnect()
+    }
   }, [])
 
   if (redirect) return <Navigate to='signin' replace={true} />
   return (
-    <AuthContext.Provider value={user} >
+    <AuthContext.Provider value={[user, socket]} >
       {children}
     </AuthContext.Provider>
   )

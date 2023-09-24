@@ -2,10 +2,7 @@ import { useParams } from "react-router-dom"
 import { useEffect, useState, createContext, useContext } from "react"
 import axios from "axios"
 import Loader from "../components/Loader"
-import { useAuth } from "./AuthProvider"
-
-import io from 'socket.io-client'
-const socket = io.connect('http://localhost:4000', {transports: ['websocket']})
+import { useAuth, useSocket } from "./AuthProvider"
 
 
 const RoomContext = createContext()
@@ -21,19 +18,15 @@ export const useNewMsg = () => {
 export const useJoinRoom = () => {
   return useContext(RoomContext)[2]
 }
-export const useChatSocket = () => {
-  return useContext(RoomContext)[3]
-}
 
 const RoomProvider = ({children}) => {
   
   const user = useAuth()
+  const socket = useSocket()
   const { roomID } = useParams()
   const [room, setRoom] = useState(null)
   const [joinRoom, setJoinRoom] = useState(false)
   const [newMessage, setNewMessage] = useState({})
-  
-  socket.emit('user-connected', user._id)
   
   useEffect(() => {
     (async function() {
@@ -54,8 +47,7 @@ const RoomProvider = ({children}) => {
       value={[
         room, 
         [newMessage, setNewMessage],
-        [joinRoom, setJoinRoom], 
-        socket
+        [joinRoom, setJoinRoom]
       ]}>
         {children}
     </RoomContext.Provider>

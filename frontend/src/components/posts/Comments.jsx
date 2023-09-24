@@ -19,7 +19,6 @@ const Comments = () => {
       try {
         const response = await axios.get(`http://127.0.0.1:4000/api/comments/${post._id}`, {withCredentials: true})
         setComments(response.data)
-        // console.log('comments', response.data)
       } catch (error) {
         setAlert({type: 'error', text: 'can not fetch comments'})
       }

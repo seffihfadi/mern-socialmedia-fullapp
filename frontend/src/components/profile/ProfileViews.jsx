@@ -13,10 +13,8 @@ const ProfileViews = () => {
         const response = await axios.get(`http://127.0.0.1:4000/api/user/views`,
           {withCredentials: true}
         )
-        console.log('response.data views', response.data)
         setProfileViews(response.data)
       } catch (error) {
-        console.log('error profileViews', error)
         setAlert({type: 'error', text: 'can not get profileViews'})
       }
     })()

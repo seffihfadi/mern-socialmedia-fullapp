@@ -13,10 +13,8 @@ const Suggestions = () => {
         const response = await axios.get(`http://127.0.0.1:4000/api/user/getsegg`,
           {withCredentials: true}
         )
-        console.log('response.data sugg', response.data)
         setSeggestions(response.data)
       } catch (error) {
-        console.log('error seggestions', error)
         setAlert({type: 'error', text: 'can not get seggestions'})
       }
     })()

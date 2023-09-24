@@ -7,8 +7,8 @@ import bodyParser from "body-parser"
 import cookieParser from "cookie-parser"
 import errorHandler from './middlewares/error.js'
 
-import {Server} from 'socket.io'
 import http from 'http'
+import {Server} from 'socket.io'
 
 import userRoutes from "./routes/user.js"
 import chatRoutes from "./routes/chat.js"
@@ -64,7 +64,6 @@ try {
       socket.userID = userID;
       console.log(`user ${userID} connected`)
       await User.findByIdAndUpdate(userID, { isActive: true })
-      // socket.emit('user-status', { userID, active: true });
     })
     // User Join Chat
     socket.on('joinChat', (data) => {
@@ -92,7 +91,6 @@ try {
     socket.on('disconnect', async () => {
       console.log(`Socket ${socket.userID} disconnected`)
       if (socket.userID) {
-
         await User.findByIdAndUpdate(socket.userID, { isActive: false })
       }
     })
@@ -105,24 +103,3 @@ try {
 } catch (err) {
   console.log('Error of Connection to DB', err)
 }
-
-
-
-
-
-
-
-
-// data.room.users.forEach(u => {
-  // console.log(data.room._id, 'rm', numConnections)
-  // const rm = io.sockets.adapter.rooms[data.room._id];
-  
-  // console.log(data.user.fullname + ' leave chat ' + oldRoomID)
-  // console.log('data.room', data.room)
-  // console.log('data.user', data.user)
-  // console.log(data.user.fullname + ' joined chat ' + data.room._id)
-  //   // console.log('u._id !== data.user._id', u._id !== data.user._id)
-  //   //if (u._id !== data.user._id) {
-    //   //}
-    // });
-    //console.log(`Socket ${socket.id} connected`);

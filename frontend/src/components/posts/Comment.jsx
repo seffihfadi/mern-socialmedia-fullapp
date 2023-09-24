@@ -64,7 +64,7 @@ const Comment = ({comment, type}) => {
       </div>
       {sessionID === comment.owner._id && /^[0-9a-fA-F]{24}$/.test(comment._id) &&
         <button onClick={() => handleDeleteComment(comment._id)} className="ml-auto">
-          <i className="uil uil-trash"></i>
+          <i className="uil uil-trash-alt"></i>
         </button>
       }
     </div>

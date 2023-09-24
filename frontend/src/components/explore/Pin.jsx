@@ -1,6 +1,8 @@
 import TimeAgo from 'react-timeago'
 import User from "../userTypes/User"
 import { motion } from 'framer-motion'
+import LikePost from '../Buttons/LikePost'
+import { downloadIMG } from '../../utils/code'
 import { useNavigate } from "react-router-dom"
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { useRef, useState, useEffect } from "react"
@@ -16,11 +18,13 @@ import 'swiper/css/effect-fade'
 
 const Pin = ({pin}) => {
 
-  const {_id: sessionID} = useAuth()
-  const navigate = useNavigate()
   const swiperRef = useRef()
+  const navigate = useNavigate()
+  const {_id: sessionID} = useAuth()
   const [autoplayInitiallyActive] = useState(false)
   const toLink = pin.owner._id === sessionID ? `/profile/?post=${pin._id}` : `/?post=${pin._id}`
+
+  pin.likeCount = pin.reactions.length
 
   useEffect(() => {
     if (swiperRef.current && !autoplayInitiallyActive) {
@@ -48,16 +52,18 @@ const Pin = ({pin}) => {
         onClick={() => navigate(toLink)} 
         className="hov"
       >
-        <div className="savedown">
-          <button onClick={(e) => {e.stopPropagation()}} ><i className="uil uil-heart"></i></button>
+        <div onClick={(e) => e.stopPropagation()}  className="savedown">
+          <LikePost pin={pin} />
           <a 
-            onClick={(e) => {e.stopPropagation()}} 
-            href={`${pin.images[0]}?dl=`} 
-            download 
+            download
+            href={downloadIMG(pin.images[0])} 
           >
             <i className="uil uil-import"></i>
           </a>
-          {pin.images.length > 1 && <i className="uil uil-layers ml-auto"></i>}
+          <div className="ml-auto flex items-center gap-3 font-bold">
+            {pin.views.length > 0 && <span>{pin.views.length} views</span>}
+            {pin.images.length > 1 && <i className="uil uil-layers"></i>}
+          </div>
         </div>
         <User user={pin.owner} span={<TimeAgo date={pin.createdAt} />} />
       </div>

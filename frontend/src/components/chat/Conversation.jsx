@@ -2,14 +2,13 @@ import axios from "axios"
 import ChatRoom from "./ChatRoom"
 import Messages from './Messages'
 import { useEffect, useState } from "react"
-import { useAuth } from "../../context/AuthProvider"
+import { useAuth, useSocket } from "../../context/AuthProvider"
 import { useAlert } from "../../context/AlertProvider"
 
 import { 
   useRoom, 
   useNewMsg, 
-  useJoinRoom, 
-  useChatSocket 
+  useJoinRoom
 } from "../../context/RoomProvider"
 
 const Conversation = () => {
@@ -17,7 +16,7 @@ const Conversation = () => {
   const room = useRoom()
   const user = useAuth()
   const [setAlert] = useAlert()
-  const socket = useChatSocket()
+  const socket = useSocket()
   const [joinRoom] = useJoinRoom()
   const [msg, setMsg] = useState('')
   const [newMessage, setNewMessage] = useNewMsg()
@@ -48,7 +47,6 @@ const Conversation = () => {
   useEffect(() => {
     socket.on('new-message-back', (msgBack) => {
       if (msgBack.sender._id !== user._id) {
-        console.log('new-message-back', msgBack)
         setNewMessage(msgBack)
       }
     })

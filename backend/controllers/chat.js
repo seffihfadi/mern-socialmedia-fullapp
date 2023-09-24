@@ -1,4 +1,5 @@
 import Room from '../models/Room.js'
+import { sendNotification } from './notifications.js'
 
 export const getUserRooms = async (req, res, next) => {
   const {_id: userID} = req.user
@@ -15,7 +16,6 @@ export const addRoom = async (req, res, next) => {
   const { chatName, connectionID } = req.body
   try {
     const isExist = await Room.find({users: {$all: [userID, connectionID]}})
-    //console.log('isExist', isExist.length > 0, isExist)
     if (isExist.length > 0) {
       res.status(200).json({message: `chat with name ${chatName} already exists !`})
     }else{
@@ -25,6 +25,8 @@ export const addRoom = async (req, res, next) => {
         res.status(500)
         throw new Error('error happend when creating the room')
       }
+
+      await sendNotification(userID, connectionID, 'added you as a contact', `/chat/${newRoom._id}`)
       res.status(200).json({message: `chat with ${chatName} created successfuly`})
     }
   } catch (error) {
@@ -52,10 +54,11 @@ export const getRoomByID = async (req, res, next) => {
     }
     
     const room = await Room.findById(roomRedID).populate('users', ['image', 'fullname', 'isActive']).populate('latestMsg')
-    console.log('room', room)
     res.status(200).json(room)
     
   } catch (error) {
     next(error)
   }
 }
+
+

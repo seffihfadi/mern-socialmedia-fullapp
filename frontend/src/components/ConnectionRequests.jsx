@@ -1,23 +1,24 @@
-import { useState, useEffect } from "react"
 import axios from "axios"
-import { useAlert } from "../context/AlertProvider"
-import { useAuth } from "../context/AuthProvider"
 import Empty from "./Empty"
-import { Link } from "react-router-dom"
 import TimeAgo from 'react-timeago'
+import { Link } from "react-router-dom"
+import { useState, useEffect } from "react"
+import { useAuth } from "../context/AuthProvider"
+import { useAlert } from "../context/AlertProvider"
 
 const ConnectionRequests = () => {
   const user = useAuth()
   const [setAlert] = useAlert()
+  const [sended, setSended] = useState(false)
   const [requests, setRequests] = useState([])
   const [sending, setSending] = useState(false)
-  const [sended, setSended] = useState(false)
 
   useEffect(() => {
     (async function () {
       try {
-        const response = await axios.get(`http://127.0.0.1:4000/api/connection-requests/${user._id}`, {withCredentials: true})
-        //console.log('response', response)
+        const response = await axios.get(`http://127.0.0.1:4000/api/connection-requests/${user._id}`, 
+          {withCredentials: true}
+        )
         setRequests(response.data)
       } catch (error) {
         setAlert({type: 'error', text: error.response.data.message})
@@ -28,8 +29,9 @@ const ConnectionRequests = () => {
   const handleConnectionResponse = async (resType, requestID) => {
     setSending(true)
     try {
-      const response = await axios.put(`http://127.0.0.1:4000/api/connection-requests/${requestID}/${resType}`, null, {withCredentials: true})
-      //console.log('response', response)
+      const response = await axios.put(`http://127.0.0.1:4000/api/connection-requests/${requestID}/${resType}`, 
+        null, {withCredentials: true}
+      )
       setAlert({type: 'success', text: response.data.message})
     } catch (error) {
       setAlert({type: 'error', text: error.response.data.message})
@@ -40,7 +42,7 @@ const ConnectionRequests = () => {
     }
   }
 
-  if (requests.length < 1) return <Empty icon="user-square" text='Connection request appear here' />
+  if (requests.length < 1) return <Empty icon="user-square" text='Connection requests are displayed here.' />
   return (
     requests.map((request) => 
     <div key={request._id} className="flex my-2 flex-col">

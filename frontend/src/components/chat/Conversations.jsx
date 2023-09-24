@@ -22,7 +22,6 @@ const Conversations = () => {
       try {
         const response = await axios.get('http://127.0.0.1:4000/api/chat/', {withCredentials: true})
         setRooms(response.data)
-        console.log('rooms', rooms)
       } catch (error) {
         setAlert({type: 'error', text: error.response.data.message})
       }

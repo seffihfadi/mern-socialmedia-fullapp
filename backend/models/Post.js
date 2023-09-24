@@ -35,10 +35,10 @@ const postSchema = new Schema({
     type: Types.ObjectId,
     ref: 'User'
   }],
-  views: {
-    type: Number,
-    default: 0
-  }
+  views: [{
+    type: Types.ObjectId,
+    ref: 'User'
+  }]
 }, {
   timestamps: true
 })

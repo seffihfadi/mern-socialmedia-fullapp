@@ -20,10 +20,7 @@ const Search = () => {
         const responce = await axios.get(`http://127.0.0.1:4000/api/user/getusers?search=${debouncedSearch}`,
           {withCredentials: true}
         )
-        console.log('first', responce.data)
-        if (responce.status === 200) {
-          setData(responce.data)
-        }
+        setData(responce.data)
       } catch (error) {
         setAlert({type: 'error', text: error.response.data.message})
       }

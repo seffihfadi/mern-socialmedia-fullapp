@@ -3,13 +3,13 @@ import Conversation from "../../components/chat/Conversation"
 import ConversationOptions from "../../components/chat/ConversationOptions"
 
 import { useEffect } from "react"
-import { useAuth } from "../../context/AuthProvider"
-import { useRoom, useJoinRoom, useChatSocket } from "../../context/RoomProvider"
+import { useAuth, useSocket } from "../../context/AuthProvider"
+import { useRoom, useJoinRoom } from "../../context/RoomProvider"
 
 const Room = () => {
   const room = useRoom()
   const {_id} = useAuth()
-  const socket = useChatSocket()
+  const socket = useSocket()
   const [joinRoom, setJoinRoom] = useJoinRoom()
   
   useEffect(() => {

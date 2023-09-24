@@ -40,3 +40,20 @@ export const insertMessage = async (req, res, next) => {
     next(error)
   }
 }
+
+
+export const deleteMessage = async (req, res, next) => {
+  const {_id: sesstionID} = req.user
+  const {messageID} = req.params
+  try {
+    const message = await Message.findById(messageID)
+    if (message.sender.toString() !== sesstionID.toString()) {
+      res.status(400)
+      throw new Error('you do not able to delete this message')
+    }
+    message.deleteOne()
+    res.status(200).json({message: 'message deleted'})
+  } catch (error) {
+    next(error)
+  }
+}

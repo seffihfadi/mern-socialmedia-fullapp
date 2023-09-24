@@ -1,11 +1,12 @@
+import axios from "axios"
 import Comments from "./Comments"
 import TimeAgo from 'react-timeago'
 import User from "../userTypes/User"
 import WriteComment from "./WriteComment"
 import LikePost from "../Buttons/LikePost"
 
-import { useState } from "react"
 import { Link } from "react-router-dom"
+import { useState, useEffect } from "react"
 import { useAuth } from "../../context/AuthProvider"
 import { usePost, useWriteTo } from "../../context/PostProvider"
 
@@ -14,15 +15,65 @@ const Post = () => {
   const {_id: sessionID} = useAuth()
   const [writeTo, setWriteTo] = useWriteTo()
   const [viewComments, setViewComments] = useState(false)
-
+  
   const handleComment = () => {
     setWriteTo({
       commentID: '', 
       postID: post._id, 
       owner: post.owner
     })
-    // setPost(prev => ({ ...prev, comments: prev.comments + 1 }))
   }
+  
+  
+  // seen post functionality
+  let timer = null
+
+  const incrementPostViews = async (postID) => {
+    try {
+      await axios.patch(`http://127.0.0.1:4000/api/post/${postID}/inc-views`, 
+        {postID: post._id}, {withCredentials: true}
+      )
+    } catch (error) {
+      console.log('error', error)
+    }
+  }
+
+  useEffect(() => {
+    const options = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.5,
+    };
+    const observer = new IntersectionObserver((entries) => {
+      const entry = entries[0]
+
+      if (entry.isIntersecting) {
+        if (post.views.indexOf(sessionID.toString()) === -1) {
+          if (!timer) {
+            timer = setInterval(async () => {
+              setPost((prev) => ({
+                ...prev,
+                views: [sessionID.toString(), ...prev.views],
+              }))
+              await incrementPostViews(post._id)
+              clearInterval(timer)
+              timer = null
+            }, 2500);
+          }
+        } // else the post was seen
+      } else {
+        if (timer) {
+          clearInterval(timer);
+          timer = null;
+        }
+      }
+    }, options);
+    observer.observe(document.getElementById(`post-${post._id}`))
+
+    return () => {
+      observer.disconnect()
+    }
+  }, [post])
 
   return (
     <div id={`post-${post._id}`} className="post">
@@ -73,13 +124,8 @@ const Post = () => {
       </div>
 
       <div className="flex gap-2 px-3">
-        <span>{post.reactions.length} likes</span>
-        {post.views > 0 && 
-          <>
-            &bull;
-            <span>{post.views} views</span>
-          </>
-        }
+        <span>{post.likeCount} likes</span>
+        {post.views.length > 0 && <>&bull; <span>{post.views.length} views</span></>}
         {post.comments > 0 && 
           <>
             &bull;

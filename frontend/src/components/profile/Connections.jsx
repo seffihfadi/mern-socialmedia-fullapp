@@ -6,7 +6,6 @@ import NotFriend from "../userTypes/NotFriend"
 const Connections = ({ user }) => {
   const connections = user.connections
   const {_id: sessionID} = useAuth()
-  //console.log('connections', connections)
   if (connections.length < 1) {
     return (
       <Empty 

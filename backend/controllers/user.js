@@ -1,9 +1,11 @@
-import User from "../models/User.js"
-import ConnectionRequest from "../models/ConnectionRequest.js"
-import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
-import cloudinary from "../utils/cloudinary.js"
+import jwt from 'jsonwebtoken'
 import mongoose from "mongoose"
+import User from "../models/User.js"
+import cloudinary from "../utils/cloudinary.js"
+import ConnectionRequest from "../models/ConnectionRequest.js"
+
+import { sendNotification } from "./notifications.js"
 
 const generateToken = (userID) => {
   return jwt.sign({ userID }, process.env.JWT_SECRET, {expiresIn: '1d'})
@@ -21,8 +23,8 @@ const addRelationTome = async (sessionID, users) => {
       (request) => request.recipient.toString() === user._id.toString()
     )
 
-     // Check if user is a Mongoose document before using toObject()
-     const userObject = user instanceof mongoose.Document ? user.toObject() : user;
+    // Check if user is a Mongoose document before using toObject()
+    const userObject = user instanceof mongoose.Document ? user.toObject() : user;
 
     return {
       ...userObject,
@@ -196,10 +198,12 @@ export const getUserByID = async (req, res, next) => {
       if (!userProfile.profileViews.includes(sessionUserID)) {
         userProfile.profileViews.push(sessionUserID)
         await userProfile.save()
+        await sendNotification(sessionUserID, userRedID, 'has reviewed your profile', `/profile/${sessionUserID}`)
       }
     }
 
     const userProfile = await User.findById(userRedID).select('-password').populate('connections')
+    // const userProfileWithRelation = await addRelationTome(sessionUserID, [userProfile])
     res.status(200).json(userProfile)
     
   } catch (error) {
@@ -238,6 +242,9 @@ export const updateProfile = async (req, res, next) => {
     if (!updatedUser) {
       res.status(500)
       throw new Error('failed to update profile')
+    }
+    for (const connection of user.connections) {
+      await sendNotification(user._id, connection, 'updated his profile', `/profile/${user._id}`)
     }
 
     res.status(200).json({message: 'your profile updated successfuly'})
@@ -319,5 +326,3 @@ export const getProfileViews = async (req, res, next) => {
     next(error)
   }
 }
-
-

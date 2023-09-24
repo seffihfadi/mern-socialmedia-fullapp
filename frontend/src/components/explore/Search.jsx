@@ -20,7 +20,6 @@ const Search = () => {
       try {
         const response = await axios.get(`http://127.0.0.1:4000/api/post/tags?search=${debouncedSearch}`, {withCredentials: true})
         setTags(response.data)
-        //console.log('response tages', response)
       } catch (error) {
         console.log('error', error)
       }

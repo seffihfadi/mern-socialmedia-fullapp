@@ -4,6 +4,13 @@ export const sendNotification = async (from, to, note, link) => {
   await Notification.create({from, to, note, link}) 
 }
 
+export const unsendNotification = async (from, to, note) => {
+  const noteTodelete = await Notification.findOne({from, to, note, seen: false})
+  if (!!note) {
+    noteTodelete.deleteOne()
+  } 
+}
+
 export const getNotifications = async (req, res, next) => {
   const {_id: sessionID} = req.user
   try {
@@ -12,7 +19,7 @@ export const getNotifications = async (req, res, next) => {
       {
         $match: {
           to: sessionID,
-          seen: false // Filter only unseen notifications
+          //seen: false // Filter only unseen notifications
         }
       },
       {
@@ -40,7 +47,8 @@ export const getNotifications = async (req, res, next) => {
       },
       {
         $sort: {
-          createdAt: -1 // Sort by 'createdAt' in ascending order (use -1 for descending order)
+          seen: 1 ,
+          createdAt: -1, 
         }
       },
       {
@@ -52,11 +60,12 @@ export const getNotifications = async (req, res, next) => {
           seen: 1 ,// Include the 'seen' value
           createdAt: 1,
           link: 1
+          
         }
       },
     ])
     
-    const redNotes = await (await Notification.populate(notifications, {path: "from", select: ['image', 'fullname']}))
+    const redNotes = await Notification.populate(notifications, {path: "from", select: ['image', 'fullname']})
     res.status(200).json(redNotes)
 
   } catch (error) {
@@ -64,3 +73,12 @@ export const getNotifications = async (req, res, next) => {
   }
 }
 
+export const seenNotification = async (req, res, next) => {
+  const {note, from, to} = req.body
+  try {
+    await Notification.updateMany({note, from, to, seen: false}, {seen: true})
+    res.status(200).json({message: 'seen'})
+  } catch (error) {
+    next(error)
+  }
+}

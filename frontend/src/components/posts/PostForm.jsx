@@ -55,7 +55,6 @@ const PostForm = ({type, postForm, setPostForm}) => {
       }
       setSending(true)
       setPostForm({privacy, desc, images: isUpdate ? [] : imagesb64})
-      //console.log('postForm', privacy, desc)
 
     } catch (error) {
       setAlert({type: 'error', text: error.message})

@@ -24,9 +24,8 @@ const EditInfo = ({image}) => {
         {fullname, slogan, bio, image}, {withCredentials: true}
       )
       setAlert({text: response.data.message , type: 'success'})
-      navigate('/profile', {replace: true})
+      navigate(`/profile/${userProfile._id}`, {replace: true})
     } catch (error) {
-      console.log('error jjjj', error)
       const errorMsg = error.name === 'AxiosError' ? error.response.data.message : error.errors[0]
       setAlert({text: errorMsg, type: 'error'})
     } finally {

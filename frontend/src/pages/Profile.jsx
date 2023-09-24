@@ -1,9 +1,9 @@
-import { Outlet, useParams } from "react-router-dom"
-import { useState, useEffect } from "react"
-import { useAlert } from "../context/AlertProvider"
 import axios from "axios"
-import { useAuth } from "../context/AuthProvider"
 import Loader from "../components/Loader"
+import { useState, useEffect } from "react"
+import { useAuth } from "../context/AuthProvider"
+import { useAlert } from "../context/AlertProvider"
+import { Outlet, useParams } from "react-router-dom"
 
 
 const Profile = () => {
@@ -15,8 +15,9 @@ const Profile = () => {
   useEffect(() => {
     (async function() {
       try {
-        const response = await axios.get(`http://127.0.0.1:4000/api/user/${userID || user._id}`, {withCredentials: true})
-        //console.log('response USER', response)
+        const response = await axios.get(`http://127.0.0.1:4000/api/user/${userID || user._id}`, 
+          {withCredentials: true}
+        )
         setUserProfile(response.data)
       } catch (error) {
         setAlert({type: 'error', text: error.response.data.message})

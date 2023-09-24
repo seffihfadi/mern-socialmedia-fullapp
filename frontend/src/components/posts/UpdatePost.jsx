@@ -17,12 +17,9 @@ const UpdatePost = () => {
     (async function () {
       try {
         const response = await axios.get(`http://127.0.0.1:4000/api/post/${postID}`, {withCredentials: true})
-        //console.log('response', response)
         setPostForm(response.data)
         
       } catch (error) {
-        //setAlert({type: 'error', text: error.response.data.message})
-        console.log('error', error)
         navigate('/', {replace: true})
       }
     })()

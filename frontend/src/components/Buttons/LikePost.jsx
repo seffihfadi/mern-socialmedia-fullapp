@@ -1,18 +1,22 @@
 import axios from "axios"
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { usePost } from "../../context/PostProvider"
 
-const LikePost = () => {
-  const [post, setPost] = usePost()
+const LikePost = ({pin=null}) => {
+  // console.log(' pin',  pin)
+  const [post, setPost] = !!pin ? useState(pin) : usePost()
 
   const handleLike = async () => {
-    setPost(prev => ({...prev, isLiked: !prev.isLiked}))
-    console.log('post', post)
+    setPost(prev => ({
+      ...prev,
+      isLiked: !prev.isLiked,
+      likeCount: prev.isLiked ? prev.likeCount - 1 : prev.likeCount + 1, 
+    }))
+
     try {
-      const response = await axios.patch(`http://127.0.0.1:4000/api/post/${post._id}/reaction`, 
+      await axios.patch(`http://127.0.0.1:4000/api/post/${post._id}/reaction`, 
         {}, {withCredentials: true}
       )
-      console.log('response', response)
     } catch (error) {
       console.log('error', error)
     }

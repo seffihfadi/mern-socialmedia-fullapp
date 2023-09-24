@@ -9,7 +9,8 @@ import {
   deletePost, 
   getExplore, 
   getTags, 
-  getUserPosts
+  getUserPosts,
+  incPostViews
 } from '../controllers/post.js'
 
 const postRoutes = express.Router()
@@ -22,6 +23,7 @@ postRoutes.route('/:postID').get(privat, getPost)
 postRoutes.route('/:postID').delete(privat, deletePost)
 postRoutes.route('/:postID/reaction').patch(privat, likePost)
 postRoutes.route('/:postID/update').patch(privat, updatePost)
+postRoutes.route('/:postID/inc-views').patch(privat, incPostViews)
 postRoutes.route('/:userID/posts').get(privat, getUserPosts)
 
 export default postRoutes

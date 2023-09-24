@@ -14,8 +14,9 @@ const AddPost = () => {
     (async function () {
       if (!postForm) return
       try {
-        const response = await axios.post('http://127.0.0.1:4000/api/post/create', postForm, {withCredentials: true})
-        //console.log('response', response)
+        const response = await axios.post('http://127.0.0.1:4000/api/post/create', 
+          postForm, {withCredentials: true}
+        )
         setAlert({type: 'success', text: response.data.message})
       } catch (error) {
         setAlert({type: 'error', text: error.response.data.message})

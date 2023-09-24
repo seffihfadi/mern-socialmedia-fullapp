@@ -10,7 +10,7 @@ body{
 
 .back{
   
-  background-image: url('/bg9.jpg');
+  background-image: url('/bg.jpg');
   @apply w-screen h-screen fixed top-0 left-0 -z-10 bg-center
 }
 
@@ -51,7 +51,12 @@ nav a {
   @apply md:my-2 relative w-full flex justify-center items-center py-2 md:py-0 outline-none transition-all
 }
 nav button{
-  @apply my-2
+  @apply my-2 relative w-full
+}
+nav a[num]::after,
+nav button[num]::after{
+  @apply content-[attr(num)] absolute text-[10px] text-white right-3 top-0 bg-red-800 px-0.5 rounded-full
+  font-bold flex justify-center items-center border-[3px] border-white
 }
 nav a.active i{
   @apply purple_gradient
@@ -70,6 +75,9 @@ nav a.active::before {
   border-purple-700 absolute -top-4 -left-4
 }
 
+.user_img.user_active::before{
+  @apply border-green-700
+}
 
 .privacy-span{
   @apply text-xs purple_gradient uppercase py-0.5 mx-2 px-2 rounded-full font-bold
@@ -220,6 +228,9 @@ input.glass {
 .msg .sendin {
   @apply -mt-6 transition-all
 }
+.msg button{
+  @apply -mr-5 opacity-0 transition-all
+}
 .msg .seenin span {
   @apply ml-14
 }
@@ -233,7 +244,9 @@ input.glass {
 .chat .msg:hover > .in span{
   @apply opacity-100 delay-1000
 }
-
+.chat .msg:hover button{
+  @apply -mr-0 opacity-100 delay-1000
+}
 
 .chat .center .msg.me .seenin span {
   @apply float-right mr-4
@@ -481,7 +494,7 @@ button:disabled{
   @apply relative
 }
 .comments .comment{
-  @apply flex gap-4 items-start my-3
+  @apply flex gap-4 items-start my-5
 }
 .comments .comment.deleted{
   @apply hidden
@@ -546,6 +559,9 @@ button:disabled{
 }
 .explore .pins .pin .hov .savedown i {
   @apply text-[17px]  text-white
+}
+.explore .pins .pin .hov .savedown i.active {
+  @apply purple_gradient
 }
 .explore .pins .pin .hov .savedown button,
 .explore .pins .pin .hov .savedown a{

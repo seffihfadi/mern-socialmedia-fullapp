@@ -1,14 +1,14 @@
 import { useDropzone } from "react-dropzone"
 import { useCallback, useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
 import { useAlert } from "../context/AlertProvider"
+import { Link, useNavigate } from "react-router-dom"
 import { SignUpValidation } from "../utils/validation"
 import axios from 'axios'
 
 const Signup = () => {
   const [setAlert] = useAlert()
-  const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
+  const [loading, setLoading] = useState(false)
   
   // display image
   const [selectedImages, setSelectedImages] = useState([])
@@ -39,7 +39,6 @@ const Signup = () => {
       navigate('/', {replace: true})
 
     } catch (error) {
-      //console.log('error', error)
       const errorMsg = error.name === 'AxiosError' ? error.response.data.message : error.errors[0]
       setAlert({text: errorMsg, type: 'error'})
     } finally {

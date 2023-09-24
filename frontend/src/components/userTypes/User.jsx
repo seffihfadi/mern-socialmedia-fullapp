@@ -2,7 +2,7 @@ import { Link } from "react-router-dom"
 const User = ({ user, span }) => {
   return (
     <>
-      <Link className="flex items-center gap-3" to={`/profile/${user._id}`}>
+      <Link onClick={(e) => e.stopPropagation()} className="flex items-center gap-3" to={`/profile/${user._id}`}>
         <div className="img flex-shrink-0">
           <img className="w-11 h-11 rounded-full object-cover" src={user.image} alt={user.fullname} />
         </div>

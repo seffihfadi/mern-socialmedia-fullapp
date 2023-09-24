@@ -5,8 +5,8 @@ import AddConnection from "../Buttons/AddConnection"
 const UserInfo = ({ user }) => {
   const session = useAuth()
   const isMyProfile = session._id === user._id
+  console.log('user', user)
   
-  //console.log('user profiles', user)
   return (
     <div className="user-info component flex flex-wrap-reverse justify-around items-center md:gap-6">
       <div className="md:max-w-md lg:max-w-sm">
@@ -15,15 +15,14 @@ const UserInfo = ({ user }) => {
         <p className="text-gray-500 my-3">{user.email}</p>
         {user.bio && <p className="text-gray-500 my-3">{user.bio}</p>}
       </div>
-      <div className="user_img my-6 relative">
+      <div className={`user_img my-6 relative ${user.isActive ? 'user_active' : ''}`}>
         <img className="w-64 h-64 object-cover rounded-full" src={user.image} alt="user-img" />
         <div className="absolute -bottom-5 flex w-full">
-        {isMyProfile ?
+        {
+          isMyProfile &&
           <Link to='/profile/edit'>
             <i className="uil uil-pen"></i>
           </Link>
-        :
-          <AddConnection />
         }
         </div>
         <div className="connex">
